@@ -3,7 +3,7 @@
  */
 #include <iostream>
 
-#include <Compression_Valence_Component.h>
+#include "compression/Compression_Valence_Component.h"
 
 using namespace std;
 
@@ -51,6 +51,13 @@ int main(int argc, char** argv)
             is_adaptive_quantization_selected,
             is_bijection_selected
     );
+
+
+    // decompression
+
+
+
+
 
     return 0;
 }
