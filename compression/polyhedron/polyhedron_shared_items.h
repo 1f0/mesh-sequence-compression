@@ -18,18 +18,12 @@
 #  include <GL/glu.h>
 #endif
 
-#include <QGLViewer/vec.h>
-#include <QGLViewer/quaternion.h>
-
 #include <fstream>
 #include <list>
 
 //#include <CGAL/IO/Polyhedron_VRML_2_ostream.h> // for vrml writing
 
 #include "CGAL/exceptions.h"
-
-// For OFF Loading
-#include "Polyhedron_OFF_CGALImporter.h"
 
 // For OBJ/SMF Loading
 #ifdef _MSC_VER
@@ -41,18 +35,6 @@
 #else
 #include "Polyhedron_OBJ_CGALImporter.h"
 #include "Polyhedron_SMF_CGALImporter.h"
-#endif
-
-// For PLY Loading
-#include "Polyhedron_PLY_CGALImporter.h"
-
-// For X3D Loading
-#include "Polyhedron_X3D_CGALImporter.h"
-#include "X3D_old.h"
-
-#ifdef WITH_ASSIMP
-	// For ASSIMP Loading
-	#include "Polyhedron_ASSIMP_CGALImporter.h"
 #endif
 
 // For Polyhedron copy
@@ -67,9 +49,6 @@ using namespace CGAL;
 
 struct Texture
 {
-	QString m_name;
-	QImage m_data;
-	GLuint m_id;
 };
 
 // compute facet normal
@@ -381,12 +360,6 @@ class MEPP_Common_Polyhedron : public CGAL::Polyhedron_3<kernel,items>
 
 			/*if (id_cube)
 				glDeleteLists(id_cube, 1);*/
-
-			for (unsigned int i = 0; i < m_texture_array.size(); i++)
-			{
-				if ( m_texture_array[i].m_id > 0 )
-					glDeleteTextures(1, &m_texture_array[i].m_id);
-			}
 		}
 
 		// MT
@@ -394,8 +367,6 @@ class MEPP_Common_Polyhedron : public CGAL::Polyhedron_3<kernel,items>
 		unsigned int nb_boundaries() {  return m_nb_boundaries; }
 		string pName;
 		bool pShow;
-		qglviewer::Vec pInitialCameraPosition;
-		qglviewer::Quaternion pInitialCameraOrientation;
 
 		// tag : AJOUT C?ine
 		int& tag() {  return m_tag; }
@@ -594,18 +565,6 @@ class MEPP_Common_Polyhedron : public CGAL::Polyhedron_3<kernel,items>
 
 		virtual void gl_draw(bool smooth_shading, bool use_normals, bool use_vertex_color, bool use_face_color, bool use_texture)
 		{
-			// texture
-			if (use_texture && has_texture())
-			{
-				int r = 0;
-				//r = rand() % m_texture_array.size();
-
-				GLuint id = m_texture_array[r].m_id;
-				QString name = m_texture_array[r].m_name;
-
-				glBindTexture(GL_TEXTURE_2D, id);
-			}
-
 			// draw polygons
 			Facet_iterator pFacet = this->facets_begin();
 			for (;pFacet != this->facets_end();pFacet++)
@@ -659,21 +618,6 @@ class MEPP_Common_Polyhedron : public CGAL::Polyhedron_3<kernel,items>
 					::glColor3f(r, g, b);
 				}
 
-				// texture
-				if (use_texture && has_texture())
-				{
-					float s,t;
-					if ( use_halfedge_texture_coordinates() ) {
-						s = pHalfedge->texture_coordinates(0);
-						t = pHalfedge->texture_coordinates(1);
-					} else
-					{
-						s = pHalfedge->vertex()->texture_coordinates(0);
-						t = pHalfedge->vertex()->texture_coordinates(1);
-					}
-
-					::glTexCoord2f(s, t);
-				}
 
 				// polygon assembly is performed per vertex
 				const Point& point  = pHalfedge->vertex()->point();
@@ -1174,41 +1118,6 @@ class MEPP_Common_Polyhedron : public CGAL::Polyhedron_3<kernel,items>
 		}
 #endif
 
-		int load_mesh_off(std::string filename)
-		{
-		    // read from stream
-			std::ifstream stream(filename.c_str());
-			if (!stream)
-			{
-				return -1;
-			}
-			stream.close();
-
-			try
-			{
-				OFF_CGALImporter<HalfedgeDS, Point> poly_builder(filename);
-				this->delegate(poly_builder);
-
-				if (!this->is_valid())
-				{
-					throw CGAL::Assertion_exception("", "", "", 0, "");
-				}
-			}
-			catch(const CGAL::Assertion_exception&)
-			{
-				std::string _msg = "load_mesh_off: error loading " + filename;
-				//throw std::exception(_msg.c_str());
-				return -4;
-			}
-			catch(...)
-			{
-				std::string _msg = "load_mesh_off: error loading " + filename;
-				//throw std::exception(_msg.c_str());
-				return -5;
-			}
-
-			return 0;
-		}
 
 		int load_mesh_obj(std::string filename)
 		{
@@ -1248,173 +1157,6 @@ class MEPP_Common_Polyhedron : public CGAL::Polyhedron_3<kernel,items>
 
 			return 0;
 		}
-
-		int load_mesh_smf(std::string filename)
-		{
-			// read from stream
-			std::ifstream stream(filename.c_str());
-			if (!stream)
-			{
-				return -1;
-			}
-			stream.close();
-
-			try
-			{
-				// build the polyhedron
-				Builder_smf<HalfedgeDS> poly_builder(filename);
-				this->delegate(poly_builder);
-
-				if (!this->is_valid())
-				{
-					throw CGAL::Assertion_exception("", "", "", 0, "");
-				}
-			}
-			catch(const CGAL::Assertion_exception&)
-			{
-				std::string _msg = "load_mesh_smf: error loading " + filename;
-				//throw std::exception(_msg.c_str());
-				return -4;
-			}
-			catch(...)
-			{
-				std::string _msg = "load_mesh_smf: error loading " + filename;
-				//throw std::exception(_msg.c_str());
-				return -5;
-			}
-
-			return 0;
-		}
-		
-		int load_mesh_ply(std::string filename)
-		{
-			// read from stream
-			std::ifstream stream(filename.c_str());
-			if (!stream)
-			{
-				return -1;
-			}
-			stream.close();
-
-			try
-			{
-				// build the polyhedron
-				Builder_ply<HalfedgeDS> poly_builder(filename);
-				this->delegate(poly_builder);
-				m_has_texture_coordinates = poly_builder.hasTextureCoordinates();
-
-				if (!this->is_valid())
-				{
-					throw CGAL::Assertion_exception("", "", "", 0, "");
-				}
-			}
-			catch(const CGAL::Assertion_exception&)
-			{
-				std::string _msg = "load_mesh_ply: error loading " + filename;
-				//throw std::exception(_msg.c_str());
-				return -4;
-			}
-			catch(...)
-			{
-				std::string _msg = "load_mesh_ply: error loading " + filename;
-				//throw std::exception(_msg.c_str());
-				return -5;
-			}
-
-			return 0;
-		}
-
-		int load_mesh_x3d(string filename)
-		{
-			IFSData ifsdata;
-			X3DMeshExtractor parser;
-			parser.load(filename, ifsdata);
-
-			try
-			{
-				X3D_CGALImporter<HalfedgeDS, Point> poly_builder(&(ifsdata.vertex), &(ifsdata.face));
-				this->delegate(poly_builder);
-
-				if (!this->is_valid())
-				{
-					throw CGAL::Assertion_exception("", "", "", 0, "");
-				}
-			}
-			catch(const CGAL::Assertion_exception&)
-			{
-				std::string _msg = "load_mesh_x3d: error loading " + filename;
-				//throw std::exception(_msg.c_str());
-				return -4;
-			}
-			catch(...)
-			{
-				std::string _msg = "load_mesh_x3d: error loading " + filename;
-				//throw std::exception(_msg.c_str());
-				return -5;
-			}
-
-			if (ifsdata.colorMode == COLOR_PER_FACE)
-			{
-				Facet_iterator f = this->facets_begin();
-
-				for (unsigned int index=0; index<ifsdata.color.size(); index++)
-				{
-					Halfedge_around_facet_circulator pHalfedge = f->facet_begin();
-					do
-					{
-						pHalfedge->vertex()->color(ifsdata.color[index][0], ifsdata.color[index][1], ifsdata.color[index][2]);
-					}
-					while(++pHalfedge != f->facet_begin());
-					f++;
-				}
-
-				this->has_color(true);
-			}
-			else if (ifsdata.colorMode == COLOR_PER_VERTEX)
-			{
-				Vertex_iterator v = this->vertices_begin();
-				for (unsigned int index=0; index<ifsdata.color.size(); index++)
-				{
-					v->color(ifsdata.color[index][0], ifsdata.color[index][1], ifsdata.color[index][2]);
-					v++;
-				}
-
-				this->has_color(true);
-			}
-			else
-			{
-				if (ifsdata.color.size()) // color per vertex
-				{
-					Vertex_iterator v = this->vertices_begin();
-					for (unsigned int index=0; index<ifsdata.color.size(); index++)
-					{
-						v->color(ifsdata.color[index][0], ifsdata.color[index][1], ifsdata.color[index][2]);
-						v++;
-					}
-
-					this->has_color(true);
-				}
-			}
-
-			return 0;
-		}
-
-#ifdef WITH_ASSIMP
-		int load_mesh_assimp(aiMesh* mesh)
-		{
-			// build the polyhedron
-			Builder_dae<HalfedgeDS> poly_builder(mesh);
-			this->delegate(poly_builder);
-
-			if (poly_builder.loadedSucess)
-			{				
-				m_has_texture_coordinates = poly_builder.hasTextureCoordinates();				
-				return 0;
-			}
-			else
-				return -4;
-		}
-#endif
 
         void triangulate()
         {
@@ -1465,99 +1207,6 @@ class MEPP_Common_Polyhedron : public CGAL::Polyhedron_3<kernel,items>
 			this->compute_type();
         }
 
-		void set_textures(QStringList files, bool with_gl_context=true)
-		{
-			// MT : not required ???
-			for (unsigned int i = 0; i < m_texture_array.size(); i++)
-			{
-				if ( m_texture_array[i].m_id > 0 )
-					glDeleteTextures(1, &m_texture_array[i].m_id);
-			}
-
-			m_texture_array.clear();
-
-			for (int i = 0; i < files.size(); i++)
-			{
-				Texture texture;
-
-				texture.m_name = files[i];
-				bool load_sucess = texture.m_data.load(texture.m_name);
-				if (load_sucess)
-				{
-					if (with_gl_context)
-						texture.m_id = convertTextureToGLFormat(texture.m_data);
-
-					m_texture_array.push_back(texture);
-				}
-			}
-		}
-
-		void set_textures(vector<Texture> textures, bool with_gl_context=true)
-		{
-			// MT : not required ???
-			for (unsigned int i = 0; i < m_texture_array.size(); i++)
-			{
-				if ( m_texture_array[i].m_id > 0 )
-					glDeleteTextures(1, &m_texture_array[i].m_id);
-			}
-
-			m_texture_array.clear();
-
-			for (unsigned int i = 0; i < textures.size(); i++) // MT add unsigned
-			{
-				Texture texture = textures[i];
-				if (with_gl_context)
-					texture.m_id = convertTextureToGLFormat(texture.m_data);
-				m_texture_array.push_back(texture);				
-			}
-		}
-
-		GLuint convertTextureToGLFormat( QImage& _texsrc )
-		{
-		  {
-			// adjust texture size: 2^k * 2^l
-			int tex_w, w( _texsrc.width()  );
-			int tex_h, h( _texsrc.height() );
-
-			for (tex_w=1; tex_w <= w; tex_w <<= 1) {};
-			for (tex_h=1; tex_h <= h; tex_h <<= 1) {};
-			tex_w >>= 1;
-			tex_h >>= 1;
-			_texsrc = _texsrc.scaled( tex_w, tex_h, Qt::IgnoreAspectRatio, Qt::SmoothTransformation );
-		  }
-
-		  QImage texture( QGLWidget::convertToGLFormat ( _texsrc ) );
-		  
-		  glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
-		  glPixelStorei(GL_UNPACK_SKIP_ROWS,   0);
-		  glPixelStorei(GL_UNPACK_SKIP_PIXELS, 0);
-		  glPixelStorei(GL_UNPACK_ALIGNMENT,   1);
-		  glPixelStorei(GL_PACK_ROW_LENGTH,    0);
-		  glPixelStorei(GL_PACK_SKIP_ROWS,     0);
-		  glPixelStorei(GL_PACK_SKIP_PIXELS,   0);
-		  glPixelStorei(GL_PACK_ALIGNMENT,     1);    
-		  
-		  GLuint tex_id_ = 0;
-		  glGenTextures(1, &tex_id_);
-		  glBindTexture(GL_TEXTURE_2D, tex_id_);
-		    
-		  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-		  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-		  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-		  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);      
-		  
-		  glTexImage2D(GL_TEXTURE_2D,       // target
-				   0,                   // level
-				   GL_RGBA,             // internal format
-				   texture.width(),     // width  (2^n)
-				   texture.height(),    // height (2^m)
-				   0,                   // border
-				   GL_RGBA,             // format
-				   GL_UNSIGNED_BYTE,    // type
-				   texture.bits() );    // pointer to pixels
-
-		  return tex_id_;
-		}
 
 		inline void use_halfedge_texture_coordinates(bool value)
 		{
@@ -1577,130 +1226,17 @@ class MEPP_Common_Polyhedron : public CGAL::Polyhedron_3<kernel,items>
 		void apply_texture_to_vertex_colors(unsigned int indexe = 0,
 			float modifier_offset_texture_coordinate_s = 1.0f, float modifier_offset_texture_coordinate_t = 1.0f)
 		{
-			if (m_texture_array.size() > indexe && indexe)
-				for (Vertex_iterator it = this->vertices_begin(); it != this->vertices_end(); ++it)
-				{
-					std::vector<int> position_coordinate_upper_left;
-					std::vector<int> position_coordinate_upper_right;
-					std::vector<int> position_coordinate_down_left;
-					std::vector<int> position_coordinate_down_right;
-					std::vector<int> position_coordinate_target;
 
-					std::vector<int> color_upper_left;
-					std::vector<int> color_upper_right;
-					std::vector<int> color_down_left;
-					std::vector<int> color_down_right;
-					std::vector<int> color_target;
-
-					std::vector<float> texture_coordinate_upper_left;
-					std::vector<float> texture_coordinate_upper_right;
-					std::vector<float> texture_coordinate_down_left;
-					std::vector<float> texture_coordinate_down_right;
-					std::vector<float> texture_coordinate_target;
-
-					float texture_coordinate_s = it->texture_coordinates(0);
-					float texture_coordinate_t = 1-it->texture_coordinates(1);
-
-					float offset_texture_coordinate_s = (1.0f/m_texture_array[indexe].m_data.size().width())*modifier_offset_texture_coordinate_s;
-					float offset_texture_coordinate_t = (1.0f/m_texture_array[indexe].m_data.size().height())*modifier_offset_texture_coordinate_t;
-
-					texture_coordinate_upper_left.push_back(texture_coordinate_s-offset_texture_coordinate_s);
-					texture_coordinate_upper_left.push_back(texture_coordinate_t+offset_texture_coordinate_t);
-
-					texture_coordinate_upper_right.push_back(texture_coordinate_s+offset_texture_coordinate_s);
-					texture_coordinate_upper_right.push_back(texture_coordinate_t+offset_texture_coordinate_t);
-
-					texture_coordinate_down_left.push_back(texture_coordinate_s-offset_texture_coordinate_s);
-					texture_coordinate_down_left.push_back(texture_coordinate_t-offset_texture_coordinate_t);
-
-					texture_coordinate_down_right.push_back(texture_coordinate_s+offset_texture_coordinate_s);
-					texture_coordinate_down_right.push_back(texture_coordinate_t-offset_texture_coordinate_t);
-
-					texture_coordinate_target.push_back(texture_coordinate_s);
-					texture_coordinate_target.push_back(texture_coordinate_t);
-
-					GetPos(indexe, position_coordinate_upper_left, texture_coordinate_upper_left);
-					GetPixel(indexe, position_coordinate_upper_left, color_upper_left);
-
-					GetPos(indexe, position_coordinate_upper_right, texture_coordinate_upper_right);
-					GetPixel(indexe, position_coordinate_upper_right, color_upper_right);
-
-					GetPos(indexe, position_coordinate_down_left, texture_coordinate_down_left);
-					GetPixel(indexe, position_coordinate_down_left, color_down_left);
-
-					GetPos(indexe, position_coordinate_down_right, texture_coordinate_down_right);
-					GetPixel(indexe, position_coordinate_down_right, color_down_right);
-
-					GetPos(indexe, position_coordinate_target, texture_coordinate_target);
-					GetPixel(indexe, position_coordinate_target, color_target);
-
-					std::vector<int> color_p1;
-					std::vector<int> color_p2;
-
-					interpolate(color_p1,color_upper_left,color_down_left,texture_coordinate_target[1],texture_coordinate_upper_left[1],texture_coordinate_down_left[1]);
-
-					interpolate(color_p2,color_upper_right,color_down_right,texture_coordinate_target[1],texture_coordinate_upper_right[1],texture_coordinate_down_right[1]);
-
-					interpolate(color_target,color_p1,color_p2,texture_coordinate_target[0],texture_coordinate_upper_right[0],texture_coordinate_down_right[0]);
-
-					it->color(color_target[0]/255.,color_target[1]/255.,color_target[2]/255.);
-				}
 		}
 
 		void copy_textures(const MEPP_Common_Polyhedron* mesh)
 		{
-			m_has_texture_coordinates = mesh->m_has_texture_coordinates;
-			m_use_halfedge_texture_coordinates = mesh->m_use_halfedge_texture_coordinates;
 
-			m_texture_array = mesh->m_texture_array;
-			for (unsigned int i = 0; i < m_texture_array.size(); i++)
-				m_texture_array[i].m_id = convertTextureToGLFormat(m_texture_array[i].m_data);
 		}
 
 		Texture get_texture( int index )
-		{			
-			return m_texture_array[index];		
-		}	
-	protected:
-		void GetPos(int indexe, std::vector<int> &position, const std::vector<float> &texture_coordinate_target) 
 		{
-			position.clear();
-			position.push_back(texture_coordinate_target[0]*m_texture_array[indexe].m_data.size().width());
-			position.push_back(texture_coordinate_target[1]*m_texture_array[indexe].m_data.size().height());
-
-			if (position[0] >= m_texture_array[indexe].m_data.size().width())
-				position[0] = m_texture_array[indexe].m_data.size().width() - 1;
-			if (position[1] >= m_texture_array[indexe].m_data.size().height())
-				position[1] = m_texture_array[indexe].m_data.size().height() - 1;
-
-			if (position[0] < 0)
-				position[0] = 0;
-			if (position[1] < 0)
-				position[1] = 0;
-		}
-
-		void GetPixel(int indexe, const std::vector<int> &position, std::vector<int> &color ) 
-		{
-			color.clear();
-			color.resize(3);
-
-			QRgb rgb = m_texture_array[indexe].m_data.pixel(position[0],position[1]);
-			QColor pixel_color = QColor(rgb);
-			pixel_color.getRgb(&color[0],&color[1],&color[2]);
-		}
-
-		void interpolate(std::vector<int> &color,const std::vector<int> &color1, const std::vector<int> &color2,
-			const float &y, const float &y1, const float &y2)
-		{
-			color.clear();
-			color.resize(3);
-			for (unsigned int i = 0; i < color.size(); i++)
-			{
-				if ((y2 - y1)!=0)
-					color[i] = color1[i] + (color2[i]-color1[i])*(y - y1)/(y2 - y1);
-				else
-					color[i] = color1[i];
-			}
+			return m_texture_array[index];
 		}
 
 #if (0)

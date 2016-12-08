@@ -33,7 +33,7 @@ int main(int argc, char** argv)
     bool is_bijection_selected = false;
 
     PolyhedronPtr mesh_ptr(new Polyhedron());
-    mesh_ptr->load_mesh_obj(filename);
+    mesh_ptr->load_mesh_obj(input_file_name);
 
     Compression_Valence_Component cv(mesh_ptr);
     cv.Main_Function(

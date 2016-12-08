@@ -18,3 +18,4 @@ include_directories(compression)
 include_directories(compression/polyhedron)
 
 add_subdirectory(compression)
+add_subdirectory(compression/polyhedron)

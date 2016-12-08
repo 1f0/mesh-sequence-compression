@@ -8,7 +8,7 @@
 #ifndef Compression_Valence_COMPONENT_H
 #define Compression_Valence_COMPONENT_H
 
-#include "Polyhedron/polyhedron.h"
+#include "polyhedron/polyhedron.h"
 
 #include "Compression_Valence_Polyhedron.h"
 #include "arithmetic_codec.h"
@@ -16,7 +16,6 @@
 
 #include <queue>
 #include <list>
-#include <QtCore/QString>
 
 // struct of integer coordinates
 
