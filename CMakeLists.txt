@@ -13,3 +13,8 @@ set(SOURCE_FILES main.cpp compression/Compression_Valence_Component.h compressio
 add_executable(${PRJ_NAME} ${SOURCE_FILES})
 
 target_link_libraries(${PRJ_NAME} Qt4::QtCore)
+
+include_directories(compression)
+include_directories(compression/polyhedron)
+
+add_subdirectory(compression)
