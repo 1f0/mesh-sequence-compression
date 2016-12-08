@@ -12,7 +12,7 @@ int main(int argc, char** argv)
     if (argc != 4)
     {
         std::cout << "Usage: " << argv[0]
-                  << " Input_file Output_file Remain_V_Num" << std::endl;
+                  << " Input_file[obj] Output_file[p3d] Remain_V_Num" << std::endl;
         exit(1);
     }
 
@@ -51,13 +51,6 @@ int main(int argc, char** argv)
             is_adaptive_quantization_selected,
             is_bijection_selected
     );
-
-
-    // decompression
-
-
-
-
 
     return 0;
 }

@@ -34,7 +34,6 @@
 #pragma warning(pop)
 #else
 #include "Polyhedron_OBJ_CGALImporter.h"
-#include "Polyhedron_SMF_CGALImporter.h"
 #endif
 
 // For Polyhedron copy
