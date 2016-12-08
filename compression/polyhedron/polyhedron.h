@@ -11,7 +11,7 @@
 #endif
 
 // for typeFuncOpenSave
-#include <QtCore/QString>
+#include <QString>
 class Viewer;
 // for typeFuncOpenSave
 
