@@ -43,16 +43,16 @@ class Enriched_vertex :
   {
   }
 
-  // Le constructeur PAS par défaut appelle les constructeurs PAR DEFAUT des classes ancetres
-  // en plus de celles appelles appellées explicitement.
-  // On a besoin d'appeller explicitement le constructeur(pt) de base pour la création de polyhedre
+  // Le constructeur PAS par defaut appelle les constructeurs PAR DEFAUT des classes ancetres
+  // en plus de celles appelles appellees explicitement.
+  // On a besoin d'appeller explicitement le constructeur(pt) de base pour la crï¿½ation de polyhedre
   Enriched_vertex(const P& pt) : MEPP_Common_Vertex<Refs, T, P, Norm>(pt)
   {
     this->point() = pt;
   }
 
   // La creation du polyhedre implique un appel au constructeur par copie,
-  // qui appelle le constructeur par défaut de base et ne copie pas le point.
+  // qui appelle le constructeur par defaut de base et ne copie pas le point.
   // Il faut donc avoir un constructeur par copie explicite qui s'occupe du point.
   Enriched_vertex(const Enriched_vertex& v)
   {

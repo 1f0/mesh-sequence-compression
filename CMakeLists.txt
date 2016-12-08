@@ -25,7 +25,6 @@ target_link_libraries(${PRJ_NAME} Qt4::QtCore)
 target_link_libraries(${PRJ_NAME} ${CGAL_LIBRARIES} ${CGAL_3RD_PARTY_LIBRARIES})
 target_link_libraries(${PRJ_NAME} ${OPENGL_gl_LIBRARY} ${OPENGL_glu_LIBRARY})
 
-
 include_directories(compression)
 include_directories(compression/polyhedron)
 
