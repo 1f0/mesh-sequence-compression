@@ -39,7 +39,8 @@ QString Compression_Valence_Component::Main_Function(Polyhedron &_pMesh,
                                                      const int &_Forget_value,
                                                      const bool _Compression_selected,
                                                      const bool _Adaptive_quantization,
-                                                     const bool _Is_bijection_selected) {
+                                                     const bool _Is_bijection_selected)
+{
     Timer timer;
     timer.start();
 
@@ -170,8 +171,7 @@ void Compression_Valence_Component::Multiple_Components_Initialization(Polyhedro
                 Halfedge_around_facet_circulator pHalfedge = F->facet_begin();
                 Halfedge_around_facet_circulator end = pHalfedge;
 
-                CGAL_For_all(pHalfedge, end)
-                {
+                CGAL_For_all(pHalfedge, end) {
                     // tag the vertex to its corresponding component number
                     if (pHalfedge->vertex()->Component_Number == -1) {
                         pHalfedge->vertex()->Component_Number = Component_index;
@@ -986,8 +986,7 @@ int Compression_Valence_Component::Decimation_Conquest(Polyhedron &_pMesh,
             Halfedge_around_vertex_circulator Hvc_end = Hvc;
 
             int Number_neighboring_border_vertices = 0;
-            CGAL_For_all(Hvc, Hvc_end)
-            {
+            CGAL_For_all(Hvc, Hvc_end) {
                 if (Is_Border_Vertex(Hvc->opposite()))
                     Number_neighboring_border_vertices++;
 
@@ -1011,8 +1010,7 @@ int Compression_Valence_Component::Decimation_Conquest(Polyhedron &_pMesh,
 
                 // Test if the two patch border vertices are not connected
                 // by an edge.
-                CGAL_For_all(vh_it, vh_it_end)
-                {
+                CGAL_For_all(vh_it, vh_it_end) {
                     if (vh_it->opposite()->vertex() == vh2) {
                         Check_border_structure = false;
                         break;
@@ -1078,7 +1076,7 @@ int Compression_Valence_Component::Decimation_Conquest(Polyhedron &_pMesh,
                 }
 
 
-                vector <Halfedge_handle> Border_edges;
+                vector<Halfedge_handle> Border_edges;
                 int Number_jump = 0;
 
                 while (g->next()->is_border_edge() == false) {
@@ -1684,7 +1682,7 @@ Compression_Valence_Component::Un_Regulation(Polyhedron &_pMesh, Arithmetic_Code
             // Insertion of a vertex
             Halfedge_handle pass = h;
 
-            vector <Point3d> Vertices; //contains 1-ring and 2-rings vertices
+            vector<Point3d> Vertices; //contains 1-ring and 2-rings vertices
             Point3d Barycenter = Barycenter_Patch_After_Removal(pass, 3);
             Point_Int BC = Change_Real_Int(Barycenter, Component_ID);
 
@@ -1991,7 +1989,7 @@ void Compression_Valence_Component::Un_Decimation_Conquest(Polyhedron &_pMesh,
                 g = h;
                 Halfedge_handle pass = h;
 
-                vector <Point3d> Vertices; //contains 1-ring and 2-ring vertices;
+                vector<Point3d> Vertices; //contains 1-ring and 2-ring vertices;
                 Point3d Barycenter = Barycenter_Patch_After_Removal(pass, valence);
                 Point_Int BC = Change_Real_Int(Barycenter, Component_ID);
 
@@ -2200,7 +2198,7 @@ void Compression_Valence_Component::Un_Decimation_Conquest(Polyhedron &_pMesh,
                 }
                 //#endif
 
-                vector <Halfedge_handle> Border_edges;
+                vector<Halfedge_handle> Border_edges;
                 int Number_jump = 0;
 
                 if (g->next()->is_border_edge())
@@ -2275,7 +2273,7 @@ void Compression_Valence_Component::Un_Decimation_Conquest(Polyhedron &_pMesh,
                 // border edge with valence == 4
             else if (valence == 9) {
                 int Number_jump = -1;
-                vector <Halfedge_handle> Border_edges;
+                vector<Halfedge_handle> Border_edges;
 
                 if ((type == 5) || (type == 8)) {
                     // jump == 0;
@@ -3256,8 +3254,7 @@ void Compression_Valence_Component::Calculate_Edge_Color_Difference(Polyhedron &
 
             double Mean = 0.0;
             int Count = 0;
-            CGAL_For_all(hvc, phvc)
-            {
+            CGAL_For_all(hvc, phvc) {
                 if (hvc->opposite()->vertex()->Vertex_Flag == FREE) {
                     Color_Unit Color_0, Color_1;
                     Color_0.c0 = hvc->vertex()->color_int(0);
@@ -3324,8 +3321,7 @@ void Compression_Valence_Component::Calculate_Edge_Color_Difference(Polyhedron &
 
             Halfedge_around_vertex_circulator h = v->vertex_begin();
             Halfedge_around_vertex_circulator h2 = h;
-            CGAL_For_all(h, h2)
-            {
+            CGAL_For_all(h, h2) {
                 if (h->opposite()->vertex()->Vertex_Flag == FREE)
                     vertices.push(&(*(h->opposite()->vertex())));
             }
@@ -3427,7 +3423,7 @@ void Compression_Valence_Component::Diminush_Color_Quantization_Precision(Polyhe
     int Vertex_index = 0;
 
     // Color table which stocks all present colors
-    vector <vector<int>> Color_table;
+    vector<vector<int>> Color_table;
 
     while (!vertices.empty()) {
         Vertex *v = vertices.front();
@@ -3484,23 +3480,20 @@ void Compression_Valence_Component::Diminush_Color_Quantization_Precision(Polyhe
                 h = v->vertex_begin();
 
                 Halfedge_around_vertex_circulator h2 = h;
-                CGAL_For_all(h, h2)
-                {
+                CGAL_For_all(h, h2) {
                     if (h->opposite()->vertex()->Vertex_Number > Comp_number)
                         Comp_number = h->opposite()->vertex()->Vertex_Number;
                 }
 
                 h = h2;
-                CGAL_For_all(h, h2)
-                {
+                CGAL_For_all(h, h2) {
                     if (h->opposite()->vertex()->Vertex_Number == Comp_number)
                         break;
                 }
             }
 
             Halfedge_around_vertex_circulator h2 = h;
-            CGAL_For_all(h, h2)
-            {
+            CGAL_For_all(h, h2) {
                 if (h->opposite()->vertex()->Vertex_Flag == FREE)
                     vertices.push(&(*(h->opposite()->vertex())));
             }
@@ -3610,8 +3603,7 @@ Compression_Valence_Component::Augment_Geometry_Quantization_Precision(Polyhedro
             Halfedge_around_vertex_circulator hvc = v->vertex_begin();
             Halfedge_around_vertex_circulator hvc2 = hvc;
             unsigned count_neighbor = 0;
-            CGAL_For_all(hvc, hvc2)
-            {
+            CGAL_For_all(hvc, hvc2) {
                 Neighbors[count_neighbor] = hvc->opposite()->vertex()->point();
                 count_neighbor++;
             }
@@ -3727,24 +3719,21 @@ Compression_Valence_Component::Augment_Geometry_Quantization_Precision(Polyhedro
                 int Comp_number = -2;
                 h = v->vertex_begin();
                 Halfedge_around_vertex_circulator h2 = h;
-                CGAL_For_all(h, h2)
-                {
+                CGAL_For_all(h, h2) {
                     if (h->opposite()->vertex()->Vertex_Number > Comp_number) {
                         Comp_number = h->opposite()->vertex()->Vertex_Number;
                     }
                 }
 
                 h = h2;
-                CGAL_For_all(h, h2)
-                {
+                CGAL_For_all(h, h2) {
                     if (h->opposite()->vertex()->Vertex_Number == Comp_number)
                         break;
                 }
             }
 
             Halfedge_around_vertex_circulator h2 = h;
-            CGAL_For_all(h, h2)
-            {
+            CGAL_For_all(h, h2) {
                 if (h->opposite()->vertex()->Vertex_Flag == FREE) {
                     vertices.push(&(*(h->opposite()->vertex())));
                 }
@@ -3880,8 +3869,7 @@ Compression_Valence_Component::Diminush_Geometry_Quantization_Precision(Polyhedr
             Halfedge_around_vertex_circulator hvc = v->vertex_begin();
             Halfedge_around_vertex_circulator phvc = hvc;
 
-            CGAL_For_all(hvc, phvc)
-            {
+            CGAL_For_all(hvc, phvc) {
                 Neighbors[Count_neighbor] = hvc->opposite()->vertex()->point();
                 Count_neighbor++;
             }
@@ -3992,23 +3980,20 @@ Compression_Valence_Component::Diminush_Geometry_Quantization_Precision(Polyhedr
                 int Comp_number = -2;
                 h = v->vertex_begin();
                 Halfedge_around_vertex_circulator h2 = h;
-                CGAL_For_all(h, h2)
-                {
+                CGAL_For_all(h, h2) {
                     if (h->opposite()->vertex()->Vertex_Number > Comp_number)
                         Comp_number = h->opposite()->vertex()->Vertex_Number;
                 }
 
                 h = h2;
-                CGAL_For_all(h, h2)
-                {
+                CGAL_For_all(h, h2) {
                     if (h->opposite()->vertex()->Vertex_Number == Comp_number)
                         break;
                 }
             }
 
             Halfedge_around_vertex_circulator h2 = h;
-            CGAL_For_all(h, h2)
-            {
+            CGAL_For_all(h, h2) {
                 if (h->opposite()->vertex()->Vertex_Flag == FREE)
                     vertices.push(&(*(h->opposite()->vertex())));
             }
@@ -4155,7 +4140,7 @@ QString Compression_Valence_Component::Decompress_Init(
     int Number_basemesh_facet = Decoder.get_bits(16); // Number of facets of base mesh
 
     // Vectors for generation of base mesh
-    vector <Point3d> vlist;
+    vector<Point3d> vlist;
     vector<int> flist;
     vector<float> clist;
     vector<int> Color_index_list;
@@ -4199,7 +4184,7 @@ QString Compression_Valence_Component::Decompress_Init(
     }
 
     // Generation of base mesh using builder()
-    CModifyBasemeshBuilder <HalfedgeDS, Polyhedron, Enriched_kernel> builder(&vlist, &flist, &clist, &Color_index_list);
+    CModifyBasemeshBuilder<HalfedgeDS, Polyhedron, Enriched_kernel> builder(&vlist, &flist, &clist, &Color_index_list);
     _pMesh.delegate(builder);
 
     _pMesh.compute_normals();
@@ -4294,8 +4279,7 @@ QString Compression_Valence_Component::Decompress_Init(
                 Halfedge_around_facet_circulator pHalfedge = F->facet_begin();
                 Halfedge_around_facet_circulator end = pHalfedge;
 
-                CGAL_For_all(pHalfedge, end)
-                {
+                CGAL_For_all(pHalfedge, end) {
                     // tag the vertex to its corresponding component number
                     if (pHalfedge->vertex()->Component_Number == -1) {
                         pHalfedge->vertex()->Component_Number = Component_index;
@@ -4441,7 +4425,7 @@ void Compression_Valence_Component::Augment_Color_Quantization_Precision(Polyhed
     }
 
     // Generation of color table
-    vector <vector<int>> Color_table;
+    vector<vector<int>> Color_table;
 
     std::queue<Vertex *> vertices;
     // push a input gate to begin loop
@@ -4508,23 +4492,20 @@ void Compression_Valence_Component::Augment_Color_Quantization_Precision(Polyhed
                 int Comp_number = -2;
                 h = v->vertex_begin();
                 Halfedge_around_vertex_circulator h2 = h;
-                CGAL_For_all(h, h2)
-                {
+                CGAL_For_all(h, h2) {
                     if (h->opposite()->vertex()->Vertex_Number > Comp_number)
                         Comp_number = h->opposite()->vertex()->Vertex_Number;
                 }
 
                 h = h2;
-                CGAL_For_all(h, h2)
-                {
+                CGAL_For_all(h, h2) {
                     if (h->opposite()->vertex()->Vertex_Number == Comp_number)
                         break;
                 }
             }
 
             Halfedge_around_vertex_circulator h2 = h;
-            CGAL_For_all(h, h2)
-            {
+            CGAL_For_all(h, h2) {
                 if (h->opposite()->vertex()->Vertex_Flag == FREE)
                     vertices.push(&(*(h->opposite()->vertex())));
             }
@@ -5223,8 +5204,7 @@ void Compression_Valence_Component::JCW_Generate_Regions_On_Base_Mesh(Polyhedron
 
             int Minimal_index = 5000;
 
-            CGAL_For_all(hvc, hvc2)
-            {
+            CGAL_For_all(hvc, hvc2) {
                 int VN2 = hvc->opposite()->vertex()->Vertex_Number;
 
                 if (hvc->is_border_edge())
@@ -5246,8 +5226,7 @@ void Compression_Valence_Component::JCW_Generate_Regions_On_Base_Mesh(Polyhedron
 
                 hvc = pVert->vertex_begin();
                 hvc2 = hvc;
-                CGAL_For_all(hvc, hvc2)
-                {
+                CGAL_For_all(hvc, hvc2) {
                     if (hvc->opposite()->vertex()->Vertex_Number == Minimal_index) {
                         hvc->opposite()->vertex()->Region_Number = Seed_count;
 
@@ -5307,8 +5286,7 @@ void Compression_Valence_Component::JCW_Generate_Regions_On_Base_Mesh(Polyhedron
                 Halfedge_around_vertex_circulator hvc = pVert->vertex_begin();
                 Halfedge_around_vertex_circulator hvc2 = hvc;
 
-                CGAL_For_all(hvc, hvc2)
-                {
+                CGAL_For_all(hvc, hvc2) {
                     int N_reg = hvc->opposite()->vertex()->Region_Number;
                     if (N_reg != -1) {
                         if (this->m_Number_Vertices_Per_Regions[N_reg] < Number_vertices) {
@@ -5348,8 +5326,8 @@ void Compression_Valence_Component::JCW_Region_Mass_Center_Insert_Watermark(Poly
                                                                             list <Point3d> &SP_Moved_Position,
                                                                             list <Point3d> &SP_Original_Position,
                                                                             list <vector<int>> &JCW_Error) {
-    vector <vector<int>> Hist_inserted_vertices;
-    vector <vector<int>> Hist_remained_vertices;
+    vector<vector<int>> Hist_inserted_vertices;
+    vector<vector<int>> Hist_remained_vertices;
 
     vector<int> Temp(this->m_NumberBin + this->Number_Save_Over_bins, 0);
 
@@ -5358,7 +5336,7 @@ void Compression_Valence_Component::JCW_Region_Mass_Center_Insert_Watermark(Poly
         Hist_remained_vertices.push_back(Temp);
     }
 
-    vector <Point3d> I_Geo;
+    vector<Point3d> I_Geo;
     vector<int> I_RN;
 
     while (!FP_Geometry.empty()) {
@@ -5612,8 +5590,8 @@ void Compression_Valence_Component::JCW_Region_Mass_Center_Extract_Watermark(Pol
         f_extract = fopen("Extracted_watermark.txt", "a");
     }
 
-    vector <vector<int>> Hist_inserted_vertices;
-    vector <vector<int>> Hist_remained_vertices;
+    vector<vector<int>> Hist_inserted_vertices;
+    vector<vector<int>> Hist_remained_vertices;
 
     vector<int> Temp(this->m_NumberBin + this->Number_Save_Over_bins, 0);
     for (int i = 0; i < this->m_NumberRegion; i++) {
@@ -6020,8 +5998,7 @@ int Compression_Valence_Component::JCW_Decimation_For_Segmentation(Polyhedron &_
             Halfedge_around_vertex_circulator Hvc_end = Hvc;
 
             int Number_neighboring_border_vertices = 0;
-            CGAL_For_all(Hvc, Hvc_end)
-            {
+            CGAL_For_all(Hvc, Hvc_end) {
                 if (Is_Border_Vertex(Hvc->opposite()))
                     Number_neighboring_border_vertices++;
 
@@ -6046,8 +6023,7 @@ int Compression_Valence_Component::JCW_Decimation_For_Segmentation(Polyhedron &_
                 Halfedge_around_vertex_circulator vh_it_end = vh_it;
 
                 // Test if the two patch border vertices are not connected by an edge.
-                CGAL_For_all(vh_it, vh_it_end)
-                {
+                CGAL_For_all(vh_it, vh_it_end) {
                     if (vh_it->opposite()->vertex() == vh2) {
                         Check_border_structure = false;
                         break;
@@ -6095,7 +6071,7 @@ int Compression_Valence_Component::JCW_Decimation_For_Segmentation(Polyhedron &_
                 }
 
 
-                vector <Halfedge_handle> Border_edges;
+                vector<Halfedge_handle> Border_edges;
                 int Number_jump = 0;
 
                 while (g->next()->is_border_edge() == false) {
@@ -6578,8 +6554,7 @@ Point3d Compression_Valence_Component::JCW_Barycenter_Patch_Before_Removal(const
     Halfedge_around_vertex_circulator Hvc = g->next()->vertex()->vertex_begin();
     Halfedge_around_vertex_circulator Hvc_end = Hvc;
 
-    CGAL_For_all(Hvc, Hvc_end)
-    {
+    CGAL_For_all(Hvc, Hvc_end) {
         Point3d Pt = Hvc->opposite()->vertex()->point();
         double Spheric[3];
         this->Convert_To_Spherical(Pt, Spheric);
@@ -6958,7 +6933,7 @@ void Compression_Valence_Component::JCW_Un_Decimation_Conquest(Polyhedron &_pMes
                 }
                 //#endif
 
-                vector <Halfedge_handle> Border_edges;
+                vector<Halfedge_handle> Border_edges;
                 int Number_jump = 0;
 
                 if (g->next()->is_border_edge())
@@ -6993,8 +6968,7 @@ void Compression_Valence_Component::JCW_Un_Decimation_Conquest(Polyhedron &_pMes
                 Halfedge_around_vertex_circulator Hvc = h->next()->vertex()->vertex_begin();
                 Halfedge_around_vertex_circulator Hvc_end = Hvc;
 
-                CGAL_For_all(Hvc, Hvc_end)
-                {
+                CGAL_For_all(Hvc, Hvc_end) {
                     int N1 = Hvc->opposite()->vertex()->Region_Number;
                     bool Is_existed = false;
                     for (unsigned int j = 0; j < T_Bin.size(); j++) {
@@ -7097,7 +7071,7 @@ void Compression_Valence_Component::JCW_Un_Decimation_Conquest(Polyhedron &_pMes
             else if (valence == 9) {
                 g = h;
                 int Number_jump = -1;
-                vector <Halfedge_handle> Border_edges;
+                vector<Halfedge_handle> Border_edges;
 
                 if ((type == 5) || (type == 8)) {
                     // jump == 0;
@@ -7226,8 +7200,7 @@ void Compression_Valence_Component::JCW_Un_Decimation_Conquest(Polyhedron &_pMes
                 Halfedge_around_vertex_circulator Hvc = reg->vertex()->vertex_begin();
                 Halfedge_around_vertex_circulator Hvc_end = Hvc;
 
-                CGAL_For_all(Hvc, Hvc_end)
-                {
+                CGAL_For_all(Hvc, Hvc_end) {
                     int N1 = Hvc->opposite()->vertex()->Region_Number;
                     bool Is_existed = false;
                     for (unsigned int j = 0; j < T_Bin.size(); j++) {
@@ -7734,23 +7707,20 @@ Compression_Valence_Component::JCW_Code_Difference_Histogram_Shifting(Polyhedron
                 int Comp_number = -2;
                 h = v->vertex_begin();
                 Halfedge_around_vertex_circulator h2 = h;
-                CGAL_For_all(h, h2)
-                {
+                CGAL_For_all(h, h2) {
                     if (h->opposite()->vertex()->Vertex_Number > Comp_number)
                         Comp_number = h->opposite()->vertex()->Vertex_Number;
                 }
 
                 h = h2;
-                CGAL_For_all(h, h2)
-                {
+                CGAL_For_all(h, h2) {
                     if (h->opposite()->vertex()->Vertex_Number == Comp_number)
                         break;
                 }
             }
 
             Halfedge_around_vertex_circulator h2 = h;
-            CGAL_For_all(h, h2)
-            {
+            CGAL_For_all(h, h2) {
                 if (h->opposite()->vertex()->Vertex_Flag == FREE)
                     vertices.push(&(*(h->opposite()->vertex())));
             }
@@ -7840,23 +7810,20 @@ Compression_Valence_Component::JCW_Decode_Difference_Histogram_Shifting(Polyhedr
                 int Comp_number = -2;
                 h = v->vertex_begin();
                 Halfedge_around_vertex_circulator h2 = h;
-                CGAL_For_all(h, h2)
-                {
+                CGAL_For_all(h, h2) {
                     if (h->opposite()->vertex()->Vertex_Number > Comp_number)
                         Comp_number = h->opposite()->vertex()->Vertex_Number;
                 }
 
                 h = h2;
-                CGAL_For_all(h, h2)
-                {
+                CGAL_For_all(h, h2) {
                     if (h->opposite()->vertex()->Vertex_Number == Comp_number)
                         break;
                 }
             }
 
             Halfedge_around_vertex_circulator h2 = h;
-            CGAL_For_all(h, h2)
-            {
+            CGAL_For_all(h, h2) {
                 if (h->opposite()->vertex()->Vertex_Flag == FREE)
                     vertices.push(&(*(h->opposite()->vertex())));
             }
@@ -8345,7 +8312,7 @@ void Compression_Valence_Component::JCW_Un_Decimation_For_Insertion(Polyhedron &
             // border edge with valence == 3
             if (valence == 8) {
                 g = h;
-                vector <Halfedge_handle> Border_edges;
+                vector<Halfedge_handle> Border_edges;
                 int Number_jump = 0;
 
                 if (g->next()->is_border_edge())
@@ -8380,8 +8347,7 @@ void Compression_Valence_Component::JCW_Un_Decimation_For_Insertion(Polyhedron &
                 Halfedge_around_vertex_circulator Hvc = g->vertex()->vertex_begin();
                 Halfedge_around_vertex_circulator Hvc_end = Hvc;
 
-                CGAL_For_all(Hvc, Hvc_end)
-                {
+                CGAL_For_all(Hvc, Hvc_end) {
                     int N1 = Hvc->opposite()->vertex()->Region_Number;
                     bool Is_existed = false;
                     for (unsigned int j = 0; j < T_Bin.size(); j++) {
@@ -8490,7 +8456,7 @@ void Compression_Valence_Component::JCW_Un_Decimation_For_Insertion(Polyhedron &
             else if (valence == 9) {
                 g = h;
                 int Number_jump = -1;
-                vector <Halfedge_handle> Border_edges;
+                vector<Halfedge_handle> Border_edges;
 
                 if ((type == 5) || (type == 8)) {
                     // jump == 0;
@@ -8581,8 +8547,7 @@ void Compression_Valence_Component::JCW_Un_Decimation_For_Insertion(Polyhedron &
                 Halfedge_around_vertex_circulator Hvc = reg->vertex()->vertex_begin();
                 Halfedge_around_vertex_circulator Hvc_end = Hvc;
 
-                CGAL_For_all(Hvc, Hvc_end)
-                {
+                CGAL_For_all(Hvc, Hvc_end) {
                     int N1 = Hvc->opposite()->vertex()->Region_Number;
                     bool Is_existed = false;
                     for (unsigned int j = 0; j < T_Bin.size(); j++) {
@@ -9051,7 +9016,7 @@ void Compression_Valence_Component::JCW_Un_Decimation_For_Region_Detection(Polyh
             // border edge with valence == 3
             if (valence == 8) {
                 g = h;
-                vector <Halfedge_handle> Border_edges;
+                vector<Halfedge_handle> Border_edges;
                 int Number_jump = 0;
 
                 if (g->next()->is_border_edge())
@@ -9096,8 +9061,7 @@ void Compression_Valence_Component::JCW_Un_Decimation_For_Region_Detection(Polyh
                 Halfedge_around_vertex_circulator Hvc_end = Hvc;
 
 
-                CGAL_For_all(Hvc, Hvc_end)
-                {
+                CGAL_For_all(Hvc, Hvc_end) {
                     int N1 = Hvc->opposite()->vertex()->Region_Number;
                     bool Is_existed = false;
                     for (unsigned int j = 0; j < T_Bin.size(); j++) {
@@ -9163,7 +9127,7 @@ void Compression_Valence_Component::JCW_Un_Decimation_For_Region_Detection(Polyh
             else if (valence == 9) {
                 g = h;
                 int Number_jump = -1;
-                vector <Halfedge_handle> Border_edges;
+                vector<Halfedge_handle> Border_edges;
 
                 if ((type == 5) || (type == 8)) {
                     // jump == 0;
@@ -9263,8 +9227,7 @@ void Compression_Valence_Component::JCW_Un_Decimation_For_Region_Detection(Polyh
                 Halfedge_around_vertex_circulator Hvc = reg->vertex()->vertex_begin();
                 Halfedge_around_vertex_circulator Hvc_end = Hvc;
 
-                CGAL_For_all(Hvc, Hvc_end)
-                {
+                CGAL_For_all(Hvc, Hvc_end) {
                     int N1 = Hvc->opposite()->vertex()->Region_Number;
                     bool Is_existed = false;
                     for (unsigned int j = 0; j < T_Bin.size(); j++) {
@@ -9415,7 +9378,7 @@ bool Compression_Valence_Component::Error_Projected_Surface(Polyhedron &_pMesh,
     Center_color.push_back(C1_min + g->next()->vertex()->color_int(1) * Color_step);
     Center_color.push_back(C2_min + g->next()->vertex()->color_int(2) * Color_step);
 
-    vector <Color_Unit> Neighbors_color;
+    vector<Color_Unit> Neighbors_color;
 
     vector<float> Projected_color;
 
@@ -9814,23 +9777,20 @@ int Compression_Valence_Component::JCW_Divide_Big_Regions(Polyhedron &_pMesh, co
                 int Comp_number = -2;
                 h = v->vertex_begin();
                 Halfedge_around_vertex_circulator h2 = h;
-                CGAL_For_all(h, h2)
-                {
+                CGAL_For_all(h, h2) {
                     if (h->opposite()->vertex()->Vertex_Number > Comp_number)
                         Comp_number = h->opposite()->vertex()->Vertex_Number;
                 }
 
                 h = h2;
-                CGAL_For_all(h, h2)
-                {
+                CGAL_For_all(h, h2) {
                     if (h->opposite()->vertex()->Vertex_Number == Comp_number)
                         break;
                 }
             }
 
             Halfedge_around_vertex_circulator h2 = h;
-            CGAL_For_all(h, h2)
-            {
+            CGAL_For_all(h, h2) {
                 if (h->opposite()->vertex()->Vertex_Flag == FREE)
                     vertices.push(&(*(h->opposite()->vertex())));
             }
@@ -9869,22 +9829,19 @@ int Compression_Valence_Component::JCW_Divide_Big_Regions(Polyhedron &_pMesh, co
             int Comp_number = -2;
             h = v->vertex_begin();
             Halfedge_around_vertex_circulator h2 = h;
-            CGAL_For_all(h, h2)
-            {
+            CGAL_For_all(h, h2) {
                 if (h->opposite()->vertex()->Vertex_Number > Comp_number)
                     Comp_number = h->opposite()->vertex()->Vertex_Number;
             }
 
             h = h2;
-            CGAL_For_all(h, h2)
-            {
+            CGAL_For_all(h, h2) {
                 if (h->opposite()->vertex()->Vertex_Number == Comp_number)
                     break;
             }
 
             h2 = h;
-            CGAL_For_all(h, h2)
-            {
+            CGAL_For_all(h, h2) {
                 if (h->opposite()->vertex()->Vertex_Flag == FREE) {
                     if (h->opposite()->vertex()->Region_Number == RN) {
                         Vertices_region.push(&(*(h->opposite()->vertex())));
