@@ -11,29 +11,25 @@ int main(int argc, char **argv) {
         exit(1);
     }
 
-    //!TODO
-    //add parameter tree
     const char *input_file_name = argv[1];
     const char *output_file_name = argv[2];
 
-    PolyhedronPtr m_ptr(new Polyhedron());
+    PolyhedronPtr mesh_ptr(new Polyhedron());
 
     //Decompression
-    Compression_Valence_Component cv(m_ptr);
+    Compression_Valence_Component cv(mesh_ptr);
     cv.File_name = string(input_file_name);
-    cout << (cv.Decompress_Init(*m_ptr)).toStdString() << endl;
-    cout << "Total level of LoD is : " << cv.Total_layer << endl;
-
-    size_t v_num(0), f_num(0);
+    cout << (cv.Decompress_Init(*mesh_ptr)).toStdString() << endl;
 
     while (cv.Current_level <= cv.Total_layer) {
         string s(output_file_name);
         char tmp[255];
-        sprintf(tmp, "level%d.obj", cv.Current_level);
+        sprintf(tmp, "_lv%d.obj", cv.Current_level);
         s += string(tmp);
+
         ofstream ofs (s.c_str(), ofstream::out);
         size_t index = 0;
-        for (Vertex_iterator i = m_ptr->vertices_begin(); i != m_ptr->vertices_end(); ++i) {
+        for (Vertex_iterator i = mesh_ptr->vertices_begin(); i != mesh_ptr->vertices_end(); ++i) {
             ofs << "v "
                 << i->point().x() << " "
                 << i->point().y() << " "
@@ -41,7 +37,7 @@ int main(int argc, char **argv) {
             i->tag(index++);
         }
 
-        for (Facet_iterator i = m_ptr->facets_begin(); i != m_ptr->facets_end(); ++i) {
+        for (Facet_iterator i = mesh_ptr->facets_begin(); i != mesh_ptr->facets_end(); ++i) {
             ofs << "f";
             Halfedge_around_facet_circulator pHalfedge = i->facet_begin();
             do
@@ -52,12 +48,13 @@ int main(int argc, char **argv) {
 
         ofs.close();
 
-        cv.Current_level = cv.Decompress_Each_Step(*m_ptr, cv.File_name.c_str());
+        cv.Current_level = cv.Decompress_Each_Step(*mesh_ptr, cv.File_name.c_str());
     }
 
     return 0;
 }
 
+// Compression program
 //int main(int argc, char** argv)
 //{
 //    if (argc != 4)
@@ -87,7 +84,7 @@ int main(int argc, char **argv) {
 //    mesh_ptr->load_mesh_obj(input_file_name);
 //
 //    Compression_Valence_Component cv(mesh_ptr);
-//    cv.Main_Function(
+//    cout << cv.Main_Function(
 //            *mesh_ptr,
 //            input_file_name,
 //            output_file_name,
@@ -101,7 +98,7 @@ int main(int argc, char **argv) {
 //            is_compression_selected,
 //            is_adaptive_quantization_selected,
 //            is_bijection_selected
-//    );
+//    ).toStdString() << endl;
 //
 //    return 0;
 //}

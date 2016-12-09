@@ -4226,8 +4226,8 @@ QString Compression_Valence_Component::Decompress_Init(
 
         pVertex->Component_Number = -1;
         if (pVertex->Seed_Edge != -1) {
-            std::cout << Basemesh_vertex_number << "Seed_Edge: " << pVertex->Seed_Edge << std::endl;
-            std::cout << Basemesh_vertex_number << "Component_Number: " << pVertex->Component_Number << std::endl;
+            std::cout << Basemesh_vertex_number << " Seed_Edge: " << pVertex->Seed_Edge << std::endl;
+            std::cout << Basemesh_vertex_number << " Component_Number: " << pVertex->Component_Number << std::endl;
         }
     }
     /*float C0_min = this->C0_Min;
@@ -4237,16 +4237,18 @@ QString Compression_Valence_Component::Decompress_Init(
     float Color_small_step = 0.0;
 
     if ((this->IsColored) && (!this->IsOneColor)) {
-        for (pVertex = _pMesh.vertices_begin(); pVertex != _pMesh.vertices_end(); pVertex++) {
-            /*float LAB[3];
-        LAB[0] = pVertex->color(0);
-        LAB[1] = pVertex->color(1);
-        LAB[2] = pVertex->color(2);
 
-        float RGB[3];
-        LAB_To_RGB(LAB[0], LAB[1], LAB[2], RGB);
-        pVertex->color(RGB[0], RGB[1], RGB[2]);		*/
-        }
+        // comment by Minliang Lin
+//        for (pVertex = _pMesh.vertices_begin(); pVertex != _pMesh.vertices_end(); pVertex++) {
+//            float LAB[3];
+//            LAB[0] = pVertex->color(0);
+//            LAB[1] = pVertex->color(1);
+//            LAB[2] = pVertex->color(2);
+//
+//            float RGB[3];
+//            LAB_To_RGB(LAB[0], LAB[1], LAB[2], RGB);
+//            pVertex->color(RGB[0], RGB[1], RGB[2]);
+//        }
 
         this->C0_Range = Decoder.get_bits(C0_QUANTIZATION + 1);
         this->Color_0_Model.set_alphabet(this->C0_Range);
@@ -4294,9 +4296,10 @@ QString Compression_Valence_Component::Decompress_Init(
                     if (pHalfedge->vertex()->Component_Number == -1) {
                         pHalfedge->vertex()->Component_Number = Component_index;
                         Point3d Wrong_position = pHalfedge->vertex()->point();
-                        std::cout << "x: " << Wrong_position.x() << std::endl;
-                        std::cout << "y: " << Wrong_position.y() << std::endl;
-                        std::cout << "z: " << Wrong_position.z() << std::endl;
+
+//                        std::cout << "x: " << Wrong_position.x() << std::endl;
+//                        std::cout << "y: " << Wrong_position.y() << std::endl;
+//                        std::cout << "z: " << Wrong_position.z() << std::endl;
 
                         // The correct position of vertex is restored.
                         Point_Int Temp_pos = Change_Real_Int(Wrong_position, 0);
