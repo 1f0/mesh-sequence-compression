@@ -8,7 +8,7 @@ set(SOURCE_FILES main.cpp
         compression/Compression_Valence_Component.cpp
         compression/Processing_Kai.cpp
         compression/arithmetic_codec.cpp
-        compression/polyhedron/mesh.cpp foo.cpp)
+        compression/polyhedron/mesh.cpp)
 add_executable(${PRJ_NAME} ${SOURCE_FILES})
 
 set(CMAKE_AUTOMOC ON)

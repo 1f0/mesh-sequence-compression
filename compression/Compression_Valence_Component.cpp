@@ -39,8 +39,7 @@ QString Compression_Valence_Component::Main_Function(Polyhedron &_pMesh,
                                                      const int &_Forget_value,
                                                      const bool _Compression_selected,
                                                      const bool _Adaptive_quantization,
-                                                     const bool _Is_bijection_selected)
-{
+                                                     const bool _Is_bijection_selected) {
     Timer timer;
     timer.start();
 
@@ -4139,15 +4138,20 @@ QString Compression_Valence_Component::Decompress_Init(
     int Number_basemesh_vertex = Decoder.get_bits(15); // Number of vertices of base mesh
     int Number_basemesh_facet = Decoder.get_bits(16); // Number of facets of base mesh
 
+
+    std::cout << "# of base mesh vertext: " << Number_basemesh_vertex << endl;
+    std::cout << "# of base mesh facet: " << Number_basemesh_facet << endl;
+
     // Vectors for generation of base mesh
     vector<Point3d> vlist;
     vector<int> flist;
     vector<float> clist;
     vector<int> Color_index_list;
 
+    // Read geometry info
     for (int i = 0; i < Number_basemesh_vertex; i++) {
         Point_Int Pt_int;
-        Pt_int.x = Decoder.get_bits(Max_Qbit + 1); // Read geometry info
+        Pt_int.x = Decoder.get_bits(Max_Qbit + 1);
         Pt_int.y = Decoder.get_bits(Max_Qbit + 1);
         Pt_int.z = Decoder.get_bits(Max_Qbit + 1);
 
@@ -4197,12 +4201,18 @@ QString Compression_Valence_Component::Decompress_Init(
         Seed_Edges.insert(pair<int, int>(Vertex_number, i));
     }
 
+    std::cout << "geometry: " << vlist.size() << std::endl;
+    std::cout << "connecty: " << flist.size() << std::endl;
+    std::cout << "color: " << clist.size() << std::endl;
+
+
     int Basemesh_vertex_number = 0;
 
     Vertex_iterator pVertex = NULL;
 
     map<int, int>::iterator Seed_edge_iterator = Seed_Edges.begin();
 
+    // go through basemesh && find out seed gate
     int Count_detected_vertices = 0;
     for (pVertex = _pMesh.vertices_begin(); pVertex != _pMesh.vertices_end(); Basemesh_vertex_number++, pVertex++) {
         if (Count_detected_vertices < this->NumberComponents * 2) {
@@ -4331,7 +4341,7 @@ QString Compression_Valence_Component::Decompress_Init(
                         pNFacet->tag(Component_index);
                     }
                 }
-                exit(0);
+                //exit(0);
             }
             //this->ComponentNumberVertices.push_back(Number_vertices);
             Component_index++;

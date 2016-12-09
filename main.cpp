@@ -1,7 +1,3 @@
-/*! @file main.cpp
- *  @brief apply compression on mesh to generate LoD
- */
-
 #include <iostream>
 #include "compression/Compression_Valence_Component.h"
 #include <fstream>
@@ -25,13 +21,12 @@ int main(int argc, char **argv) {
     //Decompression
     Compression_Valence_Component cv(m_ptr);
     cv.File_name = string(input_file_name);
-    cv.Decompress_Init(*m_ptr);
+    cout << (cv.Decompress_Init(*m_ptr)).toStdString() << endl;
     cout << "Total level of LoD is : " << cv.Total_layer << endl;
 
     size_t v_num(0), f_num(0);
 
-    while (cv.Current_level != cv.Total_layer) {
-
+    while (cv.Current_level <= cv.Total_layer) {
         string s(output_file_name);
         char tmp[255];
         sprintf(tmp, "level%d.obj", cv.Current_level);
