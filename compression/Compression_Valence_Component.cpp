@@ -4295,17 +4295,17 @@ QString Compression_Valence_Component::Decompress_Init(
                     // tag the vertex to its corresponding component number
                     if (pHalfedge->vertex()->Component_Number == -1) {
                         pHalfedge->vertex()->Component_Number = Component_index;
-                        Point3d Wrong_position = pHalfedge->vertex()->point();
+//                        Point3d Wrong_position = pHalfedge->vertex()->point();
 
 //                        std::cout << "x: " << Wrong_position.x() << std::endl;
 //                        std::cout << "y: " << Wrong_position.y() << std::endl;
 //                        std::cout << "z: " << Wrong_position.z() << std::endl;
 
                         // The correct position of vertex is restored.
-                        Point_Int Temp_pos = Change_Real_Int(Wrong_position, 0);
-                        Point3d Real_position = Change_Int_Real(Temp_pos, Component_number);
+//                        Point_Int Temp_pos = Change_Real_Int(Wrong_position, 0);
+//                        Point3d Real_position = Change_Int_Real(Temp_pos, Component_number);
 
-                        pHalfedge->vertex()->point() = Real_position;
+//                        pHalfedge->vertex()->point() = Real_position;
 
                         float Wrong_LAB[3];
                         Wrong_LAB[0] = pHalfedge->vertex()->color(0);
