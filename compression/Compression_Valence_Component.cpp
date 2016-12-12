@@ -1655,8 +1655,9 @@ Compression_Valence_Component::Un_Regulation(Polyhedron &_pMesh, Arithmetic_Code
     Adaptive_Data_Model gamma(Gamma_range);
 
     while ((hi->vertex()->Seed_Edge != 2 * Component_ID) ||
-           (hi->opposite()->vertex()->Seed_Edge != 2 * Component_ID + 1))
+           (hi->opposite()->vertex()->Seed_Edge != 2 * Component_ID + 1)) {
         hi++;
+    }
 
     hi->vertex()->Vertex_Flag = CONQUERED;
     hi->opposite()->vertex()->Vertex_Flag = CONQUERED;
@@ -4291,7 +4292,7 @@ QString Compression_Valence_Component::Decompress_Init(
                 Halfedge_around_facet_circulator pHalfedge = F->facet_begin();
                 Halfedge_around_facet_circulator end = pHalfedge;
 
-                CGAL_For_all(pHalfedge, end) {
+                CGAL_For_all(pHalfedge, end) {//!TODO maybe can iterate by vertex
                     // tag the vertex to its corresponding component number
                     if (pHalfedge->vertex()->Component_Number == -1) {
                         pHalfedge->vertex()->Component_Number = Component_index;
@@ -4388,6 +4389,7 @@ int Compression_Valence_Component::Decompress_Each_Step(Polyhedron &_pMesh, cons
                     this->Augment_Geometry_Quantization_Precision(_pMesh, Decoder, Component_ID);
                 else if (Operation == 2)
                     this->Augment_Color_Quantization_Precision(_pMesh, Decoder, Component_ID);
+                else printf("Amazing %d\n", this->Decompress_count);
             }
         }
     }

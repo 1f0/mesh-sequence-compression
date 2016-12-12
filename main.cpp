@@ -22,32 +22,33 @@ int main(int argc, char **argv) {
     cout << (cv.Decompress_Init(*mesh_ptr)).toStdString() << endl;
 
     while (cv.Current_level <= cv.Total_layer) {
-        string s(output_file_name);
-        char tmp[255];
-        sprintf(tmp, "_lv%d.obj", cv.Current_level);
-        s += string(tmp);
+        if(cv.Current_level == cv.Total_layer){
+            string s(output_file_name);
+            char tmp[255];
+            sprintf(tmp, "_lv%d.obj", cv.Current_level);
+            s += string(tmp);
 
-        ofstream ofs (s.c_str(), ofstream::out);
-        size_t index = 0;
-        for (Vertex_iterator i = mesh_ptr->vertices_begin(); i != mesh_ptr->vertices_end(); ++i) {
-            ofs << "v "
-                << i->point().x() << " "
-                << i->point().y() << " "
-                << i->point().z() << endl;
-            i->tag(index++);
+            ofstream ofs (s.c_str(), ofstream::out);
+            size_t index = 0;
+            for (Vertex_iterator i = mesh_ptr->vertices_begin(); i != mesh_ptr->vertices_end(); ++i) {
+                ofs << "v "
+                    << i->point().x() << " "
+                    << i->point().y() << " "
+                    << i->point().z() << endl;
+                i->tag(index++);
+            }
+
+            for (Facet_iterator i = mesh_ptr->facets_begin(); i != mesh_ptr->facets_end(); ++i) {
+                ofs << "f";
+                Halfedge_around_facet_circulator pHalfedge = i->facet_begin();
+                do
+                    ofs << ' ' << pHalfedge->vertex()->tag() + 1;
+                while (++pHalfedge != i->facet_begin());
+                ofs << endl;
+            }
+
+            ofs.close();
         }
-
-        for (Facet_iterator i = mesh_ptr->facets_begin(); i != mesh_ptr->facets_end(); ++i) {
-            ofs << "f";
-            Halfedge_around_facet_circulator pHalfedge = i->facet_begin();
-            do
-                ofs << ' ' << pHalfedge->vertex()->tag() + 1;
-            while (++pHalfedge != i->facet_begin());
-            ofs << endl;
-        }
-
-        ofs.close();
-
         cv.Current_level = cv.Decompress_Each_Step(*mesh_ptr, cv.File_name.c_str());
     }
 
