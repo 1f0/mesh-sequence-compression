@@ -4139,7 +4139,6 @@ QString Compression_Valence_Component::Decompress_Init(
     int Number_basemesh_vertex = Decoder.get_bits(15); // Number of vertices of base mesh
     int Number_basemesh_facet = Decoder.get_bits(16); // Number of facets of base mesh
 
-
     std::cout << "# of base mesh vertext: " << Number_basemesh_vertex << endl;
     std::cout << "# of base mesh facet: " << Number_basemesh_facet << endl;
 
