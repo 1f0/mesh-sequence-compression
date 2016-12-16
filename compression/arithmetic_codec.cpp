@@ -366,15 +366,17 @@ void Arithmetic_Codec::encode(unsigned data,
     if (--M.symbols_until_update == 0) M.update(true);  // periodic model update
 }
 
+int cnt = 0;
+
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 unsigned Arithmetic_Codec::decode(Adaptive_Data_Model &M) {
 #ifdef _DEBUG
     if (mode != 2) AC_Error("decoder not initialized");
 #endif
 
-    unsigned n, s, x, y = length;
+    printf("%d", cnt++);
 
-    printf("%d",length);
+    unsigned n, s, x, y = length;
 
     if (M.decoder_table) {              // use table look-up for faster decoding
 
@@ -400,7 +402,7 @@ unsigned Arithmetic_Codec::decode(Adaptive_Data_Model &M) {
         do {
             unsigned z = length * M.distribution[m];
             if (z > value) {
-                n = m;
+                 n = m;
                 y = z;                                             // value is smaller
             } else {
                 s = m;
