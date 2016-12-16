@@ -1665,12 +1665,18 @@ Compression_Valence_Component::Un_Regulation(Polyhedron &_pMesh, Arithmetic_Code
 
     Halfedge_handle h;
 
+    int cnt = 0;
+
     while (!Halfedges.empty()) {
         h = Halfedges.front();
         Halfedges.pop();
 
         if ((h->facet()->Facet_Flag == CONQUERED) || (h->facet()->Facet_Flag == TO_BE_REMOVED))// already visited.
             continue;
+
+        if(++cnt == 28){
+            printf("%f\n", sin(cnt));
+        }
 
         // read connectivity information
         int valence = Decoder.decode(Connectivity) + 3;

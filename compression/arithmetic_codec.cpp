@@ -374,6 +374,8 @@ unsigned Arithmetic_Codec::decode(Adaptive_Data_Model &M) {
 
     unsigned n, s, x, y = length;
 
+    printf("%d",length);
+
     if (M.decoder_table) {              // use table look-up for faster decoding
 
         unsigned dv = value / (length >>= DM__LengthShift);
@@ -410,7 +412,8 @@ unsigned Arithmetic_Codec::decode(Adaptive_Data_Model &M) {
     value -= x;                                               // update interval
     length = y - x;
 
-    if (length < AC__MinLength) renorm_dec_interval();        // renormalization
+    if (length < AC__MinLength)
+        renorm_dec_interval();        // renormalization
 
     ++M.symbol_count[s];
     if (--M.symbols_until_update == 0) M.update(false);  // periodic model update
