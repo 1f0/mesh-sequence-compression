@@ -1654,9 +1654,12 @@ Compression_Valence_Component::Un_Regulation(Polyhedron &_pMesh, Arithmetic_Code
     Adaptive_Data_Model alpha(Alpha_range);
     Adaptive_Data_Model gamma(Gamma_range);
 
+    int x = 0;
+
     while ((hi->vertex()->Seed_Edge != 2 * Component_ID) ||
            (hi->opposite()->vertex()->Seed_Edge != 2 * Component_ID + 1)) {
         hi++;
+        x++;
     }
 
     hi->vertex()->Vertex_Flag = CONQUERED;
@@ -1734,13 +1737,10 @@ Compression_Valence_Component::Un_Regulation(Polyhedron &_pMesh, Arithmetic_Code
             Point_Int Center = BC + Diff;
 
             Point3d Center_vertex = this->Change_Int_Real(Center, Component_ID);
-
-//
-//            cnt++;
-//            if(cnt>0 && cnt<7) {
-//                printf("B%d %d %d %d\n", cnt, BC.x, BC.y,BC.z);
-//                printf("D%d %d %d %d\n", cnt, Diff.x, Diff.y,Diff.z);
-//            }
+            cnt++;
+            if(cnt>10&&cnt<20){
+                printf("%d,%f,%f,%f\n", cnt, Center_vertex.x(), Center_vertex.y(), Center_vertex.z());
+            }
 
             // Assign the region number to inserted vertex
             Halfedge_handle reg = h;
@@ -4346,11 +4346,6 @@ QString Compression_Valence_Component::Decompress_Init(
 
 // Description : To decode step by step - show intermediate meshes
 int Compression_Valence_Component::Decompress_Each_Step(Polyhedron &_pMesh, const char *File_Name) {
-    Halfedge_iterator  gi = _pMesh.halfedges_begin();
-    for(int i=0;i<10;i++, gi++){
-        printf("%d %f %f %f\n", i, gi->vertex()->point().x(), gi->vertex()->point().y(), gi->vertex()->point().z());
-    }
-
     if (this->Decompress_count < this->GlobalCountOperation) {
         for (int Component_ID = 0; Component_ID < this->NumberComponents; Component_ID++) {
             if (this->Decompress_count < this->ComponentOperations[Component_ID]) {
