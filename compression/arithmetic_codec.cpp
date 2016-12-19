@@ -374,8 +374,6 @@ unsigned Arithmetic_Codec::decode(Adaptive_Data_Model &M) {
     if (mode != 2) AC_Error("decoder not initialized");
 #endif
 
-    printf("%d", cnt++);
-
     unsigned n, s, x, y = length;
 
     if (M.decoder_table) {              // use table look-up for faster decoding

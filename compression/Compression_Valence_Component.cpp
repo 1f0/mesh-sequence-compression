@@ -1665,6 +1665,8 @@ Compression_Valence_Component::Un_Regulation(Polyhedron &_pMesh, Arithmetic_Code
 
     Halfedge_handle h;
 
+    int cnt = 0;
+
     while (!Halfedges.empty()) {
         h = Halfedges.front();
         Halfedges.pop();
@@ -1733,53 +1735,18 @@ Compression_Valence_Component::Un_Regulation(Polyhedron &_pMesh, Arithmetic_Code
 
             Point3d Center_vertex = this->Change_Int_Real(Center, Component_ID);
 
+//
+//            cnt++;
+//            if(cnt>0 && cnt<7) {
+//                printf("B%d %d %d %d\n", cnt, BC.x, BC.y,BC.z);
+//                printf("D%d %d %d %d\n", cnt, Diff.x, Diff.y,Diff.z);
+//            }
 
             // Assign the region number to inserted vertex
             Halfedge_handle reg = h;
 
             int Selected_region = 500000;
             Selected_region = -1;
-
-            // find region contain most edge and has smallest region number
-//            vector<int> T_Bin;
-//            vector<int> T_Number;
-//
-//            for (int i = 0; i < valence; i++) {
-//                int N1 = reg->vertex()->Region_Number;
-//                printf("%d ", N1);
-//                bool Is_existed = false;
-//                for (unsigned int j = 0; j < T_Bin.size(); j++) {
-//                    if (N1 == T_Bin[j]) {
-//                        T_Number[j]++;
-//                        Is_existed = true;
-//                    }
-//                }
-//                if (!Is_existed) {
-//                    T_Bin.push_back(N1);
-//                    T_Number.push_back(1);
-//                }
-//                reg = reg->next();
-//            }
-//            int Max = -5000;
-//            for (unsigned int i = 0; i < T_Number.size(); i++) {
-//                if (T_Number[i] > Max)
-//                    Max = T_Number[i];
-//            }
-//            vector<int> T_possible_bin;
-//            for (unsigned int i = 0; i < T_Number.size(); i++) {
-//                if (T_Number[i] == Max)
-//                    T_possible_bin.push_back(T_Bin[i]);
-//            }
-//
-//            if (T_possible_bin.size() == 1) {
-//                Selected_region = T_possible_bin[0];
-//            } else {
-//                Selected_region = 5000;
-//                for (unsigned int i = 0; i < T_possible_bin.size(); i++) {
-//                    if (T_possible_bin[i] < Selected_region)
-//                        Selected_region = T_possible_bin[i];
-//                }
-//            }
 
             // Vertex insertion
             g = _pMesh.create_center_vertex(g);
@@ -4379,6 +4346,11 @@ QString Compression_Valence_Component::Decompress_Init(
 
 // Description : To decode step by step - show intermediate meshes
 int Compression_Valence_Component::Decompress_Each_Step(Polyhedron &_pMesh, const char *File_Name) {
+    Halfedge_iterator  gi = _pMesh.halfedges_begin();
+    for(int i=0;i<10;i++, gi++){
+        printf("%d %f %f %f\n", i, gi->vertex()->point().x(), gi->vertex()->point().y(), gi->vertex()->point().z());
+    }
+
     if (this->Decompress_count < this->GlobalCountOperation) {
         for (int Component_ID = 0; Component_ID < this->NumberComponents; Component_ID++) {
             if (this->Decompress_count < this->ComponentOperations[Component_ID]) {
