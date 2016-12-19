@@ -1737,10 +1737,10 @@ Compression_Valence_Component::Un_Regulation(Polyhedron &_pMesh, Arithmetic_Code
             Point_Int Center = BC + Diff;
 
             Point3d Center_vertex = this->Change_Int_Real(Center, Component_ID);
-            cnt++;
-            if(cnt>10&&cnt<20){
-                printf("%d,%f,%f,%f\n", cnt, Center_vertex.x(), Center_vertex.y(), Center_vertex.z());
-            }
+//            cnt++;
+//            if(cnt>10&&cnt<20){
+//                printf("%d,%f,%f,%f\n", cnt, Center_vertex.x(), Center_vertex.y(), Center_vertex.z());
+//            }
 
             // Assign the region number to inserted vertex
             Halfedge_handle reg = h;
