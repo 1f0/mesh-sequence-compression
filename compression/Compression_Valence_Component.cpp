@@ -1737,10 +1737,10 @@ Compression_Valence_Component::Un_Regulation(Polyhedron &_pMesh, Arithmetic_Code
             Point_Int Center = BC + Diff;
 
             Point3d Center_vertex = this->Change_Int_Real(Center, Component_ID);
-//            cnt++;
-//            if(cnt>10&&cnt<20){
-//                printf("%d,%f,%f,%f\n", cnt, Center_vertex.x(), Center_vertex.y(), Center_vertex.z());
-//            }
+            cnt++;
+            if(cnt>10&&cnt<20){
+                printf("%d,%f,%f,%f\n", cnt, Center_vertex.x(), Center_vertex.y(), Center_vertex.z());
+            }
 
             // Assign the region number to inserted vertex
             Halfedge_handle reg = h;
@@ -4353,10 +4353,14 @@ int Compression_Valence_Component::Decompress_Each_Step(Polyhedron &_pMesh, cons
                 if (Operation == 0) {
                     this->Un_Regulation(_pMesh, Decoder, Component_ID);
                     this->Un_Decimation_Conquest(_pMesh, Decoder, Component_ID);
-                } else if (Operation == 1)
+                } else if (Operation == 1) {
                     this->Augment_Geometry_Quantization_Precision(_pMesh, Decoder, Component_ID);
-                else if (Operation == 2)
+                    printf("augment geometry\n");
+                }
+                else if (Operation == 2) {
                     this->Augment_Color_Quantization_Precision(_pMesh, Decoder, Component_ID);
+                    printf("augment color\n");
+                }
                 else printf("Amazing %d\n", this->Decompress_count);
             }
         }
