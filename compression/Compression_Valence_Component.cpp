@@ -1623,6 +1623,7 @@ Compression_Valence_Component::Un_Regulation(Polyhedron &_pMesh, Arithmetic_Code
 
     int Alpha_range = Decoder.get_bits(Qbit + 1);
     int Alpha_offset = Decoder.get_bits(Qbit + 1);
+
     int Gamma_range = Decoder.get_bits(Qbit + 1);
     int Gamma_offset = Decoder.get_bits(Qbit + 1);
 
@@ -1895,6 +1896,9 @@ void Compression_Valence_Component::Un_Decimation_Conquest(Polyhedron &_pMesh,
            (hi->opposite()->vertex()->Seed_Edge != 2 * Component_ID + 1))
         hi++;
 
+
+    printf("see: %f %f %f", hi->vertex()->point().x(), hi->vertex()->point().y(), hi->vertex()->point().z());
+
     // Two vertices of seed edges are flaged CONQUERED
     hi->vertex()->Vertex_Flag = CONQUERED;
     hi->opposite()->vertex()->Vertex_Flag = CONQUERED;
@@ -2100,6 +2104,8 @@ void Compression_Valence_Component::Un_Decimation_Conquest(Polyhedron &_pMesh,
         }
             // In case of border edge.
         else if ((valence == 8) || (valence == 9)) {
+
+            printf("singular here\n");
 
             type = Find_Type(h, valence - 5);
 
