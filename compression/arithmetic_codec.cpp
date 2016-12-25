@@ -48,6 +48,8 @@
 // - - Inclusion - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 #include <stdlib.h>
+#include <iostream>
+#include <QTS>
 #include "arithmetic_codec.h"
 
 
@@ -366,13 +368,14 @@ void Arithmetic_Codec::encode(unsigned data,
     if (--M.symbols_until_update == 0) M.update(true);  // periodic model update
 }
 
-int cnt = 0;
+int gg_cnt = 0;
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 unsigned Arithmetic_Codec::decode(Adaptive_Data_Model &M) {
 #ifdef _DEBUG
     if (mode != 2) AC_Error("decoder not initialized");
 #endif
+    gg_cnt++;
 
     unsigned n, s, x, y = length;
 
@@ -752,10 +755,14 @@ void Adaptive_Data_Model::update(bool from_encoder) {
             distribution[k] = (scale * sum) >> (31 - DM__LengthShift);
             sum += symbol_count[k];
             unsigned w = distribution[k] >> table_shift;
-            while (s < w) decoder_table[++s] = k - 1;
+            while (s < w){
+                decoder_table[++s] = k - 1;
+            }
         }
         decoder_table[0] = 0;
-        while (s <= table_size) decoder_table[++s] = data_symbols - 1;
+        while (s <= table_size){
+            decoder_table[++s] = data_symbols - 1;
+        }
     }
     // set frequency of model updates
     update_cycle = (5 * update_cycle) >> 2;

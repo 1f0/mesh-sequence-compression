@@ -33,3 +33,6 @@ include_directories(compression/polyhedron)
 # add source files
 add_subdirectory(compression)
 add_subdirectory(compression/polyhedron)
+
+# debug mode
+SET(GCC_COVERAGE_COMPILE_FLAGS "-O0")

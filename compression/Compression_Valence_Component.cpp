@@ -1896,9 +1896,6 @@ void Compression_Valence_Component::Un_Decimation_Conquest(Polyhedron &_pMesh,
            (hi->opposite()->vertex()->Seed_Edge != 2 * Component_ID + 1))
         hi++;
 
-
-    printf("see: %f %f %f", hi->vertex()->point().x(), hi->vertex()->point().y(), hi->vertex()->point().z());
-
     // Two vertices of seed edges are flaged CONQUERED
     hi->vertex()->Vertex_Flag = CONQUERED;
     hi->opposite()->vertex()->Vertex_Flag = CONQUERED;
@@ -1994,6 +1991,9 @@ void Compression_Valence_Component::Un_Decimation_Conquest(Polyhedron &_pMesh,
                 Point_Int Center = BC + Diff;
 
                 Point3d Center_vertex = this->Change_Int_Real(Center, Component_ID);
+
+
+                printf("see: %d %d %d", Diff.x, Diff.y, Diff.z);
 
                 // Assign the region number to inserted vertex
                 Halfedge_handle reg = h;
