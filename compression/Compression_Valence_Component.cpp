@@ -1739,9 +1739,6 @@ Compression_Valence_Component::Un_Regulation(Polyhedron &_pMesh, Arithmetic_Code
 
             Point3d Center_vertex = this->Change_Int_Real(Center, Component_ID);
             cnt++;
-            if(cnt>10&&cnt<20){
-                printf("%d,%f,%f,%f\n", cnt, Center_vertex.x(), Center_vertex.y(), Center_vertex.z());
-            }
 
             // Assign the region number to inserted vertex
             Halfedge_handle reg = h;
@@ -1910,6 +1907,9 @@ void Compression_Valence_Component::Un_Decimation_Conquest(Polyhedron &_pMesh,
     Halfedge_handle h;
 
     while (!Halfedges.empty()) {
+        if(this->Decompress_count == 1)
+            printf("%d\n", (int)Halfedges.size());
+
         h = Halfedges.front();
         Halfedges.pop();
 
@@ -1992,8 +1992,6 @@ void Compression_Valence_Component::Un_Decimation_Conquest(Polyhedron &_pMesh,
 
                 Point3d Center_vertex = this->Change_Int_Real(Center, Component_ID);
 
-
-                printf("see: %d %d %d", Diff.x, Diff.y, Diff.z);
 
                 // Assign the region number to inserted vertex
                 Halfedge_handle reg = h;
@@ -4352,6 +4350,7 @@ QString Compression_Valence_Component::Decompress_Init(
 
 // Description : To decode step by step - show intermediate meshes
 int Compression_Valence_Component::Decompress_Each_Step(Polyhedron &_pMesh, const char *File_Name) {
+    printf("=====%d \n", this->Decompress_count);
     if (this->Decompress_count < this->GlobalCountOperation) {
         for (int Component_ID = 0; Component_ID < this->NumberComponents; Component_ID++) {
             if (this->Decompress_count < this->ComponentOperations[Component_ID]) {
@@ -4371,8 +4370,6 @@ int Compression_Valence_Component::Decompress_Each_Step(Polyhedron &_pMesh, cons
             }
         }
     }
-
-
     this->Decompress_count++;
     _pMesh.compute_normals();
 

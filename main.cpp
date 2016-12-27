@@ -26,7 +26,8 @@ int main(int argc, char **argv) {
 //        printf("%d %f %f %f\n", i, gi->vertex()->point().x(), gi->vertex()->point().y(), gi->vertex()->point().z());
 //    }
 
-    while (cv.Current_level <= cv.Total_layer) {
+    while (cv.Current_level < cv.Total_layer) {
+        cv.Current_level = cv.Decompress_Each_Step(*mesh_ptr, cv.File_name.c_str());
         if(cv.Current_level == cv.Total_layer){
             string s(output_file_name);
             char tmp[255];
@@ -54,7 +55,6 @@ int main(int argc, char **argv) {
 
             ofs.close();
         }
-        cv.Current_level = cv.Decompress_Each_Step(*mesh_ptr, cv.File_name.c_str());
     }
 
 
