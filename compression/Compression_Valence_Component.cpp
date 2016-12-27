@@ -1906,11 +1906,23 @@ void Compression_Valence_Component::Un_Decimation_Conquest(Polyhedron &_pMesh,
 
     Halfedge_handle h;
 
+    int sub_cnt = 0;
+
     while (!Halfedges.empty()) {
-        if (this->Decompress_count == 1)
+        if (this->Decompress_count == 1) {
             printf("%d\n", (int) Halfedges.size());
+            sub_cnt++;
+        }
 
         h = Halfedges.front();
+
+        if(sub_cnt==2295){
+            printf("%f %f %f\n", h->vertex()->point().x(),
+                   h->vertex()->point().y(),
+                   h->vertex()->point().z()
+            );
+        }
+
         Halfedges.pop();
 
         unsigned int valence = 0, type = 0; // define type of retriangulation
@@ -2455,11 +2467,19 @@ void Compression_Valence_Component::Un_Decimation_Conquest(Polyhedron &_pMesh,
                     h->next()->vertex()->Vertex_Sign = PLUS;
             }
 
-            if (h->next()->is_border_edge() == false)
+            if (h->next()->is_border_edge() == false) {
                 Halfedges.push(h->next()->opposite());
+            }else{
+                printf("hh border here\n");
+                exit(11);
+            }
 
             if (h->prev()->is_border_edge() == false)
                 Halfedges.push(h->prev()->opposite());
+            else{
+                printf("hh border here\n");
+                exit(11);
+            }
         }
     }
 }
