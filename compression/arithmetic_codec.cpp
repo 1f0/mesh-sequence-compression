@@ -1,4 +1,5 @@
 #include <mepp_config.h>
+
 //#ifdef BUILD_component_Compression_Valence
 int gg_cnt = 0;
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -162,7 +163,7 @@ unsigned Arithmetic_Codec::get_bits(unsigned bits) {
     if ((bits < 1) || (bits > 20)) AC_Error("invalid number of bits");
 #endif
 
-    if(clion_bug_check == true){
+    if (clion_bug_check == true) {
         printf("clion_bug_check %d: get_bits\n", gg_cnt);
     }
 
@@ -375,7 +376,6 @@ void Arithmetic_Codec::encode(unsigned data,
 }
 
 
-
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 unsigned Arithmetic_Codec::decode(Adaptive_Data_Model &M) {
 #ifdef _DEBUG
@@ -383,7 +383,7 @@ unsigned Arithmetic_Codec::decode(Adaptive_Data_Model &M) {
 #endif
     gg_cnt++;
 
-    if(gg_cnt == 10194){
+    if (gg_cnt == 10194) {
         printf("check point\n");
     }
 
@@ -413,7 +413,7 @@ unsigned Arithmetic_Codec::decode(Adaptive_Data_Model &M) {
         do {
             unsigned z = length * M.distribution[m];
             if (z > value) {
-                 n = m;
+                n = m;
                 y = z;                                             // value is smaller
             } else {
                 s = m;
@@ -432,7 +432,7 @@ unsigned Arithmetic_Codec::decode(Adaptive_Data_Model &M) {
     if (--M.symbols_until_update == 0)
         M.update(false);  // periodic model update
 
-    if(gg_cnt == 10194){
+    if (gg_cnt == 10194) {
         clion_bug_check = true;
     }
 
@@ -719,7 +719,7 @@ Adaptive_Data_Model::~Adaptive_Data_Model(void) {
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 void Adaptive_Data_Model::set_alphabet(unsigned number_of_symbols) {
-    if(clion_bug_check == true){
+    if (clion_bug_check == true) {
         printf("clion_bug_check %d: set_alphabet\n", gg_cnt);
         clion_bug_check = false;
     }
@@ -756,7 +756,7 @@ void Adaptive_Data_Model::set_alphabet(unsigned number_of_symbols) {
 void Adaptive_Data_Model::update(bool from_encoder) {
     // halve counts when a threshold is reached
 
-    if(clion_bug_check == true){
+    if (clion_bug_check == true) {
         printf("clion_bug_check %d: update\n", gg_cnt);
         clion_bug_check = false;
     }
@@ -780,12 +780,12 @@ void Adaptive_Data_Model::update(bool from_encoder) {
             distribution[k] = (scale * sum) >> (31 - DM__LengthShift);
             sum += symbol_count[k];
             unsigned w = distribution[k] >> table_shift;
-            while (s < w){
+            while (s < w) {
                 decoder_table[++s] = k - 1;
             }
         }
         decoder_table[0] = 0;
-        while (s <= table_size){
+        while (s <= table_size) {
             decoder_table[++s] = data_symbols - 1;
         }
     }
@@ -799,7 +799,7 @@ void Adaptive_Data_Model::update(bool from_encoder) {
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 void Adaptive_Data_Model::reset(void) {
-    if(clion_bug_check == true){
+    if (clion_bug_check == true) {
         printf("clion_bug_check %d: reset\n", gg_cnt);
         clion_bug_check = false;
     }

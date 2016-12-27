@@ -1907,8 +1907,8 @@ void Compression_Valence_Component::Un_Decimation_Conquest(Polyhedron &_pMesh,
     Halfedge_handle h;
 
     while (!Halfedges.empty()) {
-        if(this->Decompress_count == 1)
-            printf("%d\n", (int)Halfedges.size());
+        if (this->Decompress_count == 1)
+            printf("%d\n", (int) Halfedges.size());
 
         h = Halfedges.front();
         Halfedges.pop();
@@ -4361,12 +4361,10 @@ int Compression_Valence_Component::Decompress_Each_Step(Polyhedron &_pMesh, cons
                 } else if (Operation == 1) {
                     this->Augment_Geometry_Quantization_Precision(_pMesh, Decoder, Component_ID);
                     printf("augment geometry\n");
-                }
-                else if (Operation == 2) {
+                } else if (Operation == 2) {
                     this->Augment_Color_Quantization_Precision(_pMesh, Decoder, Component_ID);
                     printf("augment color\n");
-                }
-                else printf("Amazing %d\n", this->Decompress_count);
+                } else printf("Amazing %d\n", this->Decompress_count);
             }
         }
     }

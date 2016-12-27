@@ -28,45 +28,43 @@ int main(int argc, char **argv) {
 
     while (cv.Current_level < cv.Total_layer) {
         cv.Current_level = cv.Decompress_Each_Step(*mesh_ptr, cv.File_name.c_str());
-        if(cv.Current_level == cv.Total_layer){
-            string s(output_file_name);
-            char tmp[255];
-            sprintf(tmp, "_lv%d.obj", cv.Current_level);
-            s += string(tmp);
+    }
+    string s(output_file_name);
+    char tmp[255];
+    sprintf(tmp, "_lv%d.obj", cv.Current_level);
+    s += string(tmp);
 
-            ofstream ofs (s.c_str(), ofstream::out);
-            size_t index = 0;
-            for (Vertex_iterator i = mesh_ptr->vertices_begin(); i != mesh_ptr->vertices_end(); ++i) {
-                ofs << "v "
-                    << i->point().x() << " "
-                    << i->point().y() << " "
-                    << i->point().z() << endl;
-                i->tag(index++);
-            }
-
-            for (Facet_iterator i = mesh_ptr->facets_begin(); i != mesh_ptr->facets_end(); ++i) {
-                ofs << "f";
-                Halfedge_around_facet_circulator pHalfedge = i->facet_begin();
-                do
-                    ofs << ' ' << pHalfedge->vertex()->tag() + 1;
-                while (++pHalfedge != i->facet_begin());
-                ofs << endl;
-            }
-
-            ofs.close();
-        }
+    ofstream ofs(s.c_str(), ofstream::out);
+    size_t index = 0;
+    for (Vertex_iterator i = mesh_ptr->vertices_begin(); i != mesh_ptr->vertices_end(); ++i) {
+        ofs << "v "
+            << i->point().x() << " "
+            << i->point().y() << " "
+            << i->point().z() << endl;
+        i->tag(index++);
     }
 
+    for (Facet_iterator i = mesh_ptr->facets_begin(); i != mesh_ptr->facets_end(); ++i) {
+        ofs << "f";
+        Halfedge_around_facet_circulator pHalfedge = i->facet_begin();
+        do
+            ofs << ' ' << pHalfedge->vertex()->tag() + 1;
+        while (++pHalfedge != i->facet_begin());
+        ofs << endl;
+    }
 
-    if(false){// compression
+    ofs.close();
+
+
+    if (false) {// compression
         if (argc != 4) {
             cout << "Usage: " << argv[0]
                  << " Input_file[obj] Output_file[p3d] Remain_V_Num" << endl;
             exit(1);
         }
 
-        char* input_file_name = argv[1];
-        char* output_file_name = argv[2];
+        char *input_file_name = argv[1];
+        char *output_file_name = argv[2];
         int q_bit = 10;
 
         int n_vertices;
@@ -86,19 +84,19 @@ int main(int argc, char **argv) {
 
         Compression_Valence_Component cv(mesh_ptr);
         cout << cv.Main_Function(
-            *mesh_ptr,
-            input_file_name,
-            output_file_name,
-            q_bit,
-            n_vertices,
-            is_normal_flipping_selected,
-            is_use_metric_selected,
-            metric_thread,
-            is_use_forget_metric_selected,
-            forget_value,
-            is_compression_selected,
-            is_adaptive_quantization_selected,
-            is_bijection_selected
+                *mesh_ptr,
+                input_file_name,
+                output_file_name,
+                q_bit,
+                n_vertices,
+                is_normal_flipping_selected,
+                is_use_metric_selected,
+                metric_thread,
+                is_use_forget_metric_selected,
+                forget_value,
+                is_compression_selected,
+                is_adaptive_quantization_selected,
+                is_bijection_selected
         ).toStdString() << endl;
     }
 
