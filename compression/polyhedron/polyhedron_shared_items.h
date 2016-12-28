@@ -68,7 +68,7 @@ struct Facet_normal // (functor)
 				normal = normal / (float)std::sqrt(sqnorm);
 			sum = sum + normal;
 		}
-		while(++h != f.facet_begin());
+		while(++h != f.facet_begin());c
 		double sqnorm = to_double(sum * sum);
 		if (sqnorm != 0.0)
 			f.normal() = sum / std::sqrt(sqnorm);
@@ -79,33 +79,6 @@ struct Facet_normal // (functor)
 		}
 	}
 };
-// from Hichem
-/*struct Facet_normal
-{
-	template <class Facet>
-	void operator()(Facet& f)
-	{
-		typedef typename Facet::Normal_3		Vector_3;
-		Vector_3								facet_normal;
-		typename Facet::Halfedge_around_facet_const_circulator h = f.facet_begin();
-		do
-		{
-			facet_normal = CGAL::cross_product(h->next()->vertex()->point() - h->vertex()->point(),
-				h->next()->next()->vertex()->point() - h->next()->vertex()->point());
-		}
-		while (facet_normal != CGAL::NULL_VECTOR && ++h	!= f.facet_begin());
-		if(facet_normal != CGAL::NULL_VECTOR)
-		{
-			f.normal() = facet_normal;
-		}
-		else // All consecutive facet edges are collinear --> degenerate (0 area) facet
-		{
-			std::cerr <<std::endl << "Degenerate polyhedron facet" << std::endl << std::flush;
-			f.normal() = CGAL::NULL_VECTOR;
-			assert(facet_normal != CGAL::NULL_VECTOR);			
-		}
-	}
-};*/
 
 // compute vertex normal
 struct Vertex_normal // (functor)
