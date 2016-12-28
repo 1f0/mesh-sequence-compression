@@ -67,8 +67,6 @@ const unsigned BM__MaxCount = 1 << BM__LengthShift;  // for adaptive models
 const unsigned DM__LengthShift = 15;     // length bits discarded before mult.
 const unsigned DM__MaxCount = 1 << DM__LengthShift;  // for adaptive models
 
-bool clion_bug_check = false;
-
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 // - - Static functions  - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
@@ -162,11 +160,6 @@ unsigned Arithmetic_Codec::get_bits(unsigned bits) {
     if (mode != 2) AC_Error("decoder not initialized");
     if ((bits < 1) || (bits > 20)) AC_Error("invalid number of bits");
 #endif
-
-    if (clion_bug_check == true) {
-        printf("clion_bug_check %d: get_bits\n", gg_cnt);
-    }
-
     unsigned s = value / (length >>= bits);      // decode symbol, change length
 
     value -= length * s;                                      // update interval
@@ -383,10 +376,6 @@ unsigned Arithmetic_Codec::decode(Adaptive_Data_Model &M) {
 #endif
     gg_cnt++;
 
-    if (gg_cnt == 10194) {
-        printf("check point\n");
-    }
-
     unsigned n, s, x, y = length;
 
     if (M.decoder_table) {              // use table look-up for faster decoding
@@ -431,10 +420,6 @@ unsigned Arithmetic_Codec::decode(Adaptive_Data_Model &M) {
     ++M.symbol_count[s];
     if (--M.symbols_until_update == 0)
         M.update(false);  // periodic model update
-
-    if (gg_cnt == 10194) {
-        clion_bug_check = true;
-    }
 
     return s;
 }
@@ -719,11 +704,6 @@ Adaptive_Data_Model::~Adaptive_Data_Model(void) {
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 void Adaptive_Data_Model::set_alphabet(unsigned number_of_symbols) {
-    if (clion_bug_check == true) {
-        printf("clion_bug_check %d: set_alphabet\n", gg_cnt);
-        clion_bug_check = false;
-    }
-
     if ((number_of_symbols < 2) || (number_of_symbols > (1 << 13)))
         AC_Error("invalid number of data symbols");
 
@@ -755,12 +735,6 @@ void Adaptive_Data_Model::set_alphabet(unsigned number_of_symbols) {
 
 void Adaptive_Data_Model::update(bool from_encoder) {
     // halve counts when a threshold is reached
-
-    if (clion_bug_check == true) {
-        printf("clion_bug_check %d: update\n", gg_cnt);
-        clion_bug_check = false;
-    }
-
     if ((total_count += update_cycle) > DM__MaxCount) {
         total_count = 0;
         for (unsigned n = 0; n < data_symbols; n++)
@@ -799,11 +773,6 @@ void Adaptive_Data_Model::update(bool from_encoder) {
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 void Adaptive_Data_Model::reset(void) {
-    if (clion_bug_check == true) {
-        printf("clion_bug_check %d: reset\n", gg_cnt);
-        clion_bug_check = false;
-    }
-
     if (data_symbols == 0) return;
 
     // restore probability estimates to uniform distribution

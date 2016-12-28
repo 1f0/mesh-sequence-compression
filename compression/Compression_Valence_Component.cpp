@@ -1906,22 +1906,8 @@ void Compression_Valence_Component::Un_Decimation_Conquest(Polyhedron &_pMesh,
 
     Halfedge_handle h;
 
-    int sub_cnt = 0;
-
     while (!Halfedges.empty()) {
-        if (this->Decompress_count == 1) {
-            printf("%d\n", (int) Halfedges.size());
-            sub_cnt++;
-        }
-
         h = Halfedges.front();
-
-        if(sub_cnt==2295){
-            printf("%f %f %f\n", h->vertex()->point().x(),
-                   h->vertex()->point().y(),
-                   h->vertex()->point().z()
-            );
-        }
 
         Halfedges.pop();
 
@@ -1997,8 +1983,6 @@ void Compression_Valence_Component::Un_Decimation_Conquest(Polyhedron &_pMesh,
                     Diff = Inverse_Frenet_Rotation(Frenet, T1, T2, normal);
                 else
                     Diff = Frenet;
-                /*Point_Int Center = BC + Diff;
-          Point_Int Diff = Inverse_Frenet_Rotation(Frenet, T1, T2, normal);*/
 
                 Point_Int Center = BC + Diff;
 
@@ -2114,9 +2098,6 @@ void Compression_Valence_Component::Un_Decimation_Conquest(Polyhedron &_pMesh,
         }
             // In case of border edge.
         else if ((valence == 8) || (valence == 9)) {
-
-            printf("singular here\n");
-
             type = Find_Type(h, valence - 5);
 
             Halfedge_handle pass = h;
@@ -2469,17 +2450,10 @@ void Compression_Valence_Component::Un_Decimation_Conquest(Polyhedron &_pMesh,
 
             if (h->next()->is_border_edge() == false) {
                 Halfedges.push(h->next()->opposite());
-            }else{
-                printf("hh border here\n");
-                exit(11);
             }
 
             if (h->prev()->is_border_edge() == false)
                 Halfedges.push(h->prev()->opposite());
-            else{
-                printf("hh border here\n");
-                exit(11);
-            }
         }
     }
 }
@@ -4370,7 +4344,6 @@ QString Compression_Valence_Component::Decompress_Init(
 
 // Description : To decode step by step - show intermediate meshes
 int Compression_Valence_Component::Decompress_Each_Step(Polyhedron &_pMesh, const char *File_Name) {
-    printf("=====%d \n", this->Decompress_count);
     if (this->Decompress_count < this->GlobalCountOperation) {
         for (int Component_ID = 0; Component_ID < this->NumberComponents; Component_ID++) {
             if (this->Decompress_count < this->ComponentOperations[Component_ID]) {

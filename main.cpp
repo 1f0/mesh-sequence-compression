@@ -21,11 +21,6 @@ int main(int argc, char **argv) {
     cv.File_name = string(input_file_name);
     cout << (cv.Decompress_Init(*mesh_ptr)).toStdString() << endl;
 
-//    Halfedge_iterator  gi = (*mesh_ptr).halfedges_begin();
-//    for(int i=0;i<10;i++, gi++){
-//        printf("%d %f %f %f\n", i, gi->vertex()->point().x(), gi->vertex()->point().y(), gi->vertex()->point().z());
-//    }
-
     while (cv.Current_level < cv.Total_layer) {
         cv.Current_level = cv.Decompress_Each_Step(*mesh_ptr, cv.File_name.c_str());
     }
