@@ -27,11 +27,8 @@
 #define EMPTY_MESH QObject::tr("empty mesh")
 #define INTERNAL_MESH QObject::tr("internal mesh sample")
 
-enum { Normal, Space, Time, Specific };
-//enum { MaxManipulatedFrame = 19 };
-
-
-//#include <polyhedron_enrichment_define.h>
-
+enum {
+    Normal, Space, Time, Specific
+};
 
 #endif

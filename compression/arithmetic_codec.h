@@ -60,13 +60,14 @@ class Static_Bit_Model                         // static model for binary data
 {
 public:
 
-  Static_Bit_Model(void);
+    Static_Bit_Model(void);
 
-  void set_probability_0(double);             // set probability of symbol '0'
+    void set_probability_0(double);             // set probability of symbol '0'
 
 private:  //  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .
-  unsigned bit_0_prob;
-  friend class Arithmetic_Codec;
+    unsigned bit_0_prob;
+
+    friend class Arithmetic_Codec;
 };
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -75,18 +76,20 @@ class Static_Data_Model                       // static model for general data
 {
 public:
 
-  Static_Data_Model(void);
- ~Static_Data_Model(void);
+    Static_Data_Model(void);
 
-  unsigned model_symbols(void) { return data_symbols; }
+    ~Static_Data_Model(void);
 
-  void set_distribution(unsigned number_of_symbols,
-                        const double probability[] = 0);    // 0 means uniform
+    unsigned model_symbols(void) { return data_symbols; }
+
+    void set_distribution(unsigned number_of_symbols,
+                          const double probability[] = 0);    // 0 means uniform
 
 private:  //  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .
-  unsigned * distribution, * decoder_table;
-  unsigned data_symbols, last_symbol, table_size, table_shift;
-  friend class Arithmetic_Codec;
+    unsigned *distribution, *decoder_table;
+    unsigned data_symbols, last_symbol, table_size, table_shift;
+
+    friend class Arithmetic_Codec;
 };
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -102,15 +105,17 @@ class Adaptive_Bit_Model                     // adaptive model for binary data
 {
 public:
 
-  Adaptive_Bit_Model(void);         
+    Adaptive_Bit_Model(void);
 
-  void reset(void);                             // reset to equiprobable model
+    void reset(void);                             // reset to equiprobable model
 
 private:  //  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .
-  void     update(void);
-  unsigned update_cycle, bits_until_update;
-  unsigned bit_0_prob, bit_0_count, bit_count;
-  friend class Arithmetic_Codec;
+    void update(void);
+
+    unsigned update_cycle, bits_until_update;
+    unsigned bit_0_prob, bit_0_count, bit_count;
+
+    friend class Arithmetic_Codec;
 };
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -126,21 +131,25 @@ class Adaptive_Data_Model                    // adaptive model for binary data
 {
 public:
 
-  Adaptive_Data_Model(void);
-  Adaptive_Data_Model(unsigned number_of_symbols);
- ~Adaptive_Data_Model(void);
+    Adaptive_Data_Model(void);
 
-  unsigned model_symbols(void) { return data_symbols; }
+    Adaptive_Data_Model(unsigned number_of_symbols);
 
-  void reset(void);                             // reset to equiprobable model
-  void set_alphabet(unsigned number_of_symbols);
+    ~Adaptive_Data_Model(void);
+
+    unsigned model_symbols(void) { return data_symbols; }
+
+    void reset(void);                             // reset to equiprobable model
+    void set_alphabet(unsigned number_of_symbols);
 
 private:  //  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .
-  void     update(bool);
-  unsigned * distribution, * symbol_count, * decoder_table;
-  unsigned total_count, update_cycle, symbols_until_update;
-  unsigned data_symbols, last_symbol, table_size, table_shift;
-  friend class Arithmetic_Codec;
+    void update(bool);
+
+    unsigned *distribution, *symbol_count, *decoder_table;
+    unsigned total_count, update_cycle, symbols_until_update;
+    unsigned data_symbols, last_symbol, table_size, table_shift;
+
+    friend class Arithmetic_Codec;
 };
 
 
@@ -157,67 +166,77 @@ private:  //  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .
 
  */
 
-class Arithmetic_Codec
-{
+class Arithmetic_Codec {
 public:
 
-  Arithmetic_Codec(void);
- ~Arithmetic_Codec(void);
-  Arithmetic_Codec(unsigned max_code_bytes,
-                   unsigned char * user_buffer = 0);         // 0 = assign new
+    Arithmetic_Codec(void);
 
-  unsigned char * buffer(void) { return code_buffer; }
+    ~Arithmetic_Codec(void);
 
-  void set_buffer(unsigned max_code_bytes,
-                  unsigned char * user_buffer = 0);          // 0 = assign new
+    Arithmetic_Codec(unsigned max_code_bytes,
+                     unsigned char *user_buffer = 0);         // 0 = assign new
 
-  void     start_encoder(void);
-  void     start_decoder(void);
-  void     read_from_file(FILE * code_file);  // read code data, start decoder
+    unsigned char *buffer(void) { return code_buffer; }
 
-  unsigned stop_encoder(void);                 // returns number of bytes used
-  unsigned write_to_file(FILE * code_file);   // stop encoder, write code data
-  void     stop_decoder(void);
+    void set_buffer(unsigned max_code_bytes,
+                    unsigned char *user_buffer = 0);          // 0 = assign new
 
-  void     put_bit(unsigned bit);
-  unsigned get_bit(void);
+    void start_encoder(void);
 
-  void     put_bits(unsigned data, unsigned number_of_bits);
-  unsigned get_bits(unsigned number_of_bits);
+    void start_decoder(void);
 
-  void     encode(unsigned bit,
-                  Static_Bit_Model &);
-  unsigned decode(Static_Bit_Model &);
+    void read_from_file(FILE *code_file);  // read code data, start decoder
 
-  void     encode(unsigned data,
-                  Static_Data_Model &);
-  unsigned decode(Static_Data_Model &);
+    unsigned stop_encoder(void);                 // returns number of bytes used
+    unsigned write_to_file(FILE *code_file);   // stop encoder, write code data
+    void stop_decoder(void);
 
-  void     encode(unsigned bit,
-                  Adaptive_Bit_Model &);
-  unsigned decode(Adaptive_Bit_Model &);
+    void put_bit(unsigned bit);
 
-  void     encode(unsigned data,
-                  Adaptive_Data_Model &);
-  unsigned decode(Adaptive_Data_Model &);
-	
-  unsigned calculate_current_decoded_size(void)                          // Ho
-  {
-	  if (mode == 2)
-	  {
-		  return (unsigned)(ac_pointer - code_buffer);	// MT
-	  }
-	  else
-		  return 0;
-  }
+    unsigned get_bit(void);
+
+    void put_bits(unsigned data, unsigned number_of_bits);
+
+    unsigned get_bits(unsigned number_of_bits);
+
+    void encode(unsigned bit,
+                Static_Bit_Model &);
+
+    unsigned decode(Static_Bit_Model &);
+
+    void encode(unsigned data,
+                Static_Data_Model &);
+
+    unsigned decode(Static_Data_Model &);
+
+    void encode(unsigned bit,
+                Adaptive_Bit_Model &);
+
+    unsigned decode(Adaptive_Bit_Model &);
+
+    void encode(unsigned data,
+                Adaptive_Data_Model &);
+
+    unsigned decode(Adaptive_Data_Model &);
+
+    unsigned calculate_current_decoded_size(void)                          // Ho
+    {
+        if (mode == 2) {
+            return (unsigned) (ac_pointer - code_buffer);    // MT
+        } else
+            return 0;
+    }
 
 private:  //  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .
-  void propagate_carry(void);
-  void renorm_enc_interval(void);
-  void renorm_dec_interval(void);
-  unsigned char * code_buffer, * new_buffer, * ac_pointer;
-  unsigned base, value, length;                     // arithmetic coding state
-  unsigned buffer_size, mode;     // mode: 0 = undef, 1 = encoder, 2 = decoder
+    void propagate_carry(void);
+
+    void renorm_enc_interval(void);
+
+    void renorm_dec_interval(void);
+
+    unsigned char *code_buffer, *new_buffer, *ac_pointer;
+    unsigned base, value, length;                     // arithmetic coding state
+    unsigned buffer_size, mode;     // mode: 0 = undef, 1 = encoder, 2 = decoder
 };
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */

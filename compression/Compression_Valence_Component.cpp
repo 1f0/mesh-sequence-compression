@@ -13,7 +13,6 @@
 #include "Matrix3X3.h"
 #include "Compression_Valence_Common.h"
 #include <CGAL/Timer.h>
-#include "Processing_Kai.h"
 #include <map>
 #include <set>
 #include <bitset>
@@ -4546,147 +4545,6 @@ void Compression_Valence_Component::Attibute_Seed_Gate_Flag(Polyhedron &Original
     }
 }
 
-
-//// To reordering the color index for mapping table method.
-//int Compression_Valence_Component::Mapping_Table_Index_Reordering(Polyhedron &_pMesh)
-//{
-//	int			     New_index = 0;
-//	int				 Num_color_base_mesh;
-//	vector<int>	     Reordered_color_index;
-//	Vertex_iterator  pVertex;
-//
-//	this->ReorderingColorIndex.clear();
-//
-//	for (int i = 0; i < NUMBER_SEEDS; i++)
-//		this->ReorderingColorIndex.push_back(-1);
-//
-//	for (pVertex = _pMesh.vertices_begin(); pVertex != _pMesh.vertices_end(); pVertex++)
-//	{
-//		int Current_vertex_index = pVertex->Vertex_Color_Index;
-//
-//		if (this->ReorderingColorIndex[Current_vertex_index] == -1)
-//		{
-//			this->ReorderingColorIndex[Current_vertex_index] = New_index;
-//			New_index++;
-//		}
-//	}
-//	Num_color_base_mesh = New_index;
-//
-//
-//	list<int>::iterator Color_iter = this->ColorIndex.begin();
-//
-//	for (;Color_iter != this->ColorIndex.end(); Color_iter++)
-//	{
-//		int Current_vertex_index = *Color_iter;
-//
-//		if (this->ReorderingColorIndex[Current_vertex_index] == -1)
-//		{
-//			this->ReorderingColorIndex[Current_vertex_index] = New_index;
-//			New_index++;
-//		}
-//	}
-//
-//	return Num_color_base_mesh;
-//}
-//
-
-
-//void Compression_Valence_Component::Separate_Components(Polyhedron &_pMesh)
-//{
-//	CCopyPoly<Polyhedron, Enriched_kernel> Copy_Polyhedron;
-//
-//	int Number_components = _pMesh.nb_components();
-//
-//	if (Number_components == 1)
-//		return;
-//
-//	for (int i = 0; i < Number_components; i++)
-//	{
-//		Polyhedron * New_mesh = new Polyhedron;
-//		Copy_Polyhedron.copy(&(_pMesh), New_mesh);
-//		New_mesh->tag_facets(-1);
-//		int Component_index = 0;
-//
-//		for (Facet_iterator pFacet = New_mesh->facets_begin(); pFacet != New_mesh->facets_end(); pFacet++)
-//		{
-//			if (pFacet->tag() == -1)
-//			{
-//				New_mesh->tag_component(pFacet, -1, Component_index);
-//				Component_index++;
-//			}
-//		}
-//
-//		for (int j = 0; j < Number_components - 1; j++)
-//		{
-//
-//			for (Halfedge_iterator pHedge = New_mesh->halfedges_begin(); pHedge != New_mesh->halfedges_end(); )
-//			{
-//				Halfedge_handle h = pHedge;
-//				pHedge++;
-//
-//				if (!h->is_border())
-//				{
-//					int Facet_tag = h->facet()->tag();
-//
-//					if (Facet_tag != i)
-//					{
-//						New_mesh->erase_connected_component(h);
-//						break;
-//					}
-//				}
-//			}
-//		}
-//
-//		QString Outputfile = QString("Separate_%1").arg(i);	//Outputfile += wxString::Format("%d",i);
-//		Outputfile += ".off";
-//		New_mesh->write_off(Outputfile.toStdString(), true, false);
-//		delete New_mesh;
-//	}
-//}
-
-int Compression_Valence_Component::GetResolutionChange(Polyhedron *_pMesh, float Prec) {
-    int MinX, MinY, MaxX, MaxY;
-    MinX = MinY = 1000;
-    MaxX = MaxY = 0;
-    GLdouble *model;
-    GLdouble *proj;
-    GLint *view;
-    view = new GLint[4096];
-    model = new double[4096];
-    proj = new double[4096];
-    glGetIntegerv(GL_VIEWPORT, view);
-    glGetDoublev(GL_MODELVIEW_MATRIX, model);
-    glGetDoublev(GL_PROJECTION_MATRIX, proj);
-
-    GLdouble wx;
-    GLdouble wy;
-    GLdouble wz;
-
-    for (Vertex_iterator pVertex = _pMesh->vertices_begin(); pVertex != _pMesh->vertices_end(); pVertex++) {
-        gluProject(pVertex->point().x(), pVertex->point().y(), pVertex->point().z(), model, proj, view, &wx, &wy,
-                   &wz);  // on simule la projection du sommet dans l'espace window
-        if (wz > 0. && wz < 1) {
-            if (wx < MinX)
-                MinX = wx;
-            if (wx > MaxX)
-                MaxX = wx;
-            if (wy < MinY)
-                MinY = wy;
-            if (wy > MaxY)
-                MaxY = wy;
-        }
-    }
-
-    float aire = (MaxX - MinX) * (MaxY - MinY);
-    delete[] view;
-    delete[] model;
-    delete[] proj;
-
-    ////~la moitie des triangle sont affich? on choisi n pixel/triangle
-
-    return 2 * floor(aire / Prec);
-}
-
 void Compression_Valence_Component::Convert_To_Spherical(const Point3d &Pt, double *Spheric) {
     double r = 0., theta = 0., phi = 0.;
 
@@ -4724,91 +4582,6 @@ void Compression_Valence_Component::Initialize_Spherical_Coordinates(Polyhedron 
     }
 }
 
-
-Point3d Compression_Valence_Component::JCW_Barycenter_Patch_After_Removal(const Halfedge_handle &h, const int &valence,
-                                                                          const int &Direction) {
-
-    Halfedge_handle g = h;
-    double x = 0., y = 0., z = 0.;
-
-    for (int i = 0; i < valence; i++) {
-        Point3d Pt = g->vertex()->point();
-        double Spheric[3];
-        this->Convert_To_Spherical(Pt, Spheric);
-        if (Direction == 0)
-            Spheric[0] -= this->m_Dist * this->m_EmbeddingStrength;
-        else
-            Spheric[0] += this->m_Dist * this->m_EmbeddingStrength;
-
-        g = g->next();
-
-        double Cart[3];
-        this->Convert_To_Cartesian(Spheric, Cart);
-
-        int Qx = (int) (ceil((Cart[0] - (double) this->xmin[0]) / (double) this->Quantization_Step[0])) - 1;
-        if (Qx == -1)
-            Qx = 0;
-        int Qy = (int) (ceil((Cart[1] - (double) this->ymin[0]) / (double) this->Quantization_Step[0])) - 1;
-        if (Qy == -1)
-            Qy = 0;
-        int Qz = (int) (ceil((Cart[2] - (double) this->zmin[0]) / (double) this->Quantization_Step[0])) - 1;
-        if (Qz == -1)
-            Qz = 0;
-
-        x += this->xmin[0] + (Qx + 0.5) * this->Quantization_Step[0];
-        y += this->ymin[0] + (Qy + 0.5) * this->Quantization_Step[0];
-        z += this->zmin[0] + (Qz + 0.5) * this->Quantization_Step[0];
-    }
-
-    x = x / (double) valence;
-    y = y / (double) valence;
-    z = z / (double) valence;
-
-    return Point3d(x, y, z);
-}
-
-Point3d Compression_Valence_Component::JCW_Barycenter_Patch_Before_Removal(const Halfedge_handle &h, const int &valence,
-                                                                           const int &Direction) {
-
-    Halfedge_handle g = h;
-    double x = 0., y = 0., z = 0.;
-
-    Halfedge_around_vertex_circulator Hvc = g->next()->vertex()->vertex_begin();
-    Halfedge_around_vertex_circulator Hvc_end = Hvc;
-
-    CGAL_For_all(Hvc, Hvc_end) {
-        Point3d Pt = Hvc->opposite()->vertex()->point();
-        double Spheric[3];
-        this->Convert_To_Spherical(Pt, Spheric);
-        if (Direction == 0)
-            Spheric[0] -= this->m_Dist * this->m_EmbeddingStrength;
-        else
-            Spheric[0] += this->m_Dist * this->m_EmbeddingStrength;
-
-        double Cart[3];
-        this->Convert_To_Cartesian(Spheric, Cart);
-
-        int Qx = (int) (ceil((Cart[0] - (double) this->xmin[0]) / (double) this->Quantization_Step[0])) - 1;
-        if (Qx == -1)
-            Qx = 0;
-        int Qy = (int) (ceil((Cart[1] - (double) this->ymin[0]) / (double) this->Quantization_Step[0])) - 1;
-        if (Qy == -1)
-            Qy = 0;
-        int Qz = (int) (ceil((Cart[2] - (double) this->zmin[0]) / (double) this->Quantization_Step[0])) - 1;
-        if (Qz == -1)
-            Qz = 0;
-
-        x += this->xmin[0] + (Qx + 0.5) * this->Quantization_Step[0];
-        y += this->ymin[0] + (Qy + 0.5) * this->Quantization_Step[0];
-        z += this->zmin[0] + (Qz + 0.5) * this->Quantization_Step[0];
-    }
-
-    x = x / (double) valence;
-    y = y / (double) valence;
-    z = z / (double) valence;
-
-    return Point3d(x, y, z);
-}
 
 // Error metric which measures importance of color and geometry for each vertex.
 // Used to prevent removal of the visually important vertex.
@@ -4981,36 +4754,6 @@ void Compression_Valence_Component::Read_Information_To_Hide(const char *Message
     fclose(f_insert);
 }
 
-QString Compression_Valence_Component::Write_Information_To_Hide() {
-    list<int>::iterator it = this->m_Watermarks.begin();
-
-    unsigned int Size_watermarks = this->m_Watermarks.size();
-
-    int N_char = (int) (Size_watermarks / 8);
-
-    vector<char> ret;
-
-    for (int i = 0; i < N_char; i++) {
-        char c = 0;
-        for (int j = 0; j < 8; j++) {
-            if (*it == 1) {
-                c += (char) pow(2.0, 7 - j);
-            }
-            it++;
-        }
-
-        ret.push_back(c);
-    }
-
-    QString q;
-
-    for (int i = 0; i < N_char; i++)
-        q.append(ret[i]);
-
-    return q;
-
-}
-
 void Compression_Valence_Component::Decompression_From_File(Polyhedron &_pMesh) {
     if (this->Current_level >= this->Total_layer)
         return;
@@ -5109,6 +4852,7 @@ void Compression_Valence_Component::Decompression_All_From_File(Polyhedron &pMes
         Write_Info(pMesh);
     }
 }
+
 void Compression_Valence_Component::Write_Info(Polyhedron &_pMesh) {
 
     if (this->Process_level == 0) {
