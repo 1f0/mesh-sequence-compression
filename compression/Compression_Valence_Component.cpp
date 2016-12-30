@@ -2296,6 +2296,7 @@ void Compression_Valence_Component::Un_Decimation_Conquest(Polyhedron &_pMesh,
 
                         _pMesh.erase_facet(Border_edges[0]->opposite());
                         _pMesh.erase_facet(Border_edges[1]->opposite());
+
                     } else {
                         Number_jump = 0;
 
@@ -2366,8 +2367,8 @@ void Compression_Valence_Component::Un_Decimation_Conquest(Polyhedron &_pMesh,
                 }
                 Prev_edge = Prev_edge->next();
                 _pMesh.add_facet_to_border(Prev_edge, Border_edges[1]->opposite());
-                _pMesh.add_facet_to_border(Prev_edge, Border_edges[0]->opposite());
 
+                _pMesh.add_facet_to_border(Prev_edge, Border_edges[0]->opposite());
 
                 //vertex_tag
                 if (Number_jump == 0) {
@@ -2414,7 +2415,6 @@ void Compression_Valence_Component::Un_Decimation_Conquest(Polyhedron &_pMesh,
 
                 for (int i = 0; i < 3; i++) {
                     Border_edges[i]->opposite()->facet()->Facet_Flag = CONQUERED;
-
                     Border_edges[i]->vertex()->Vertex_Flag = CONQUERED;
                     Border_edges[i]->opposite()->vertex()->Vertex_Flag = CONQUERED;
 

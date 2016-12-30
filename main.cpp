@@ -5,7 +5,7 @@
 using namespace std;
 
 int main(int argc, char **argv) {
-    if (0) {
+    if (1) {
         if (argc != 3) {
             cout << "Usage: " << argv[0]
                  << " Input_file[input.p3d] Output_file_Prefix[output]" << endl;
