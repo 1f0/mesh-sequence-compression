@@ -2403,7 +2403,7 @@ bool Remove_Edges(Polyhedron &pMesh, const Halfedge_handle &h, const int &type) 
     bool check = false;
     Halfedge_handle g = h;
 
-    if(rcnt == 17){
+    if(rcnt == 16){
         cout<<"my "<<g->next()->opposite()->is_border()<<endl;
         cout<<g->next()->opposite()->vertex()->point().x()<<" ";
         cout<<g->next()->opposite()->vertex()->point().y()<<" ";
