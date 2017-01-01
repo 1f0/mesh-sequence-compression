@@ -26,6 +26,10 @@
 const int MINIMUM_PREDICTION_NUMBER = 3;
 const int LIMIT_NUMBER = 50;
 
+extern map<Vertex*, int> vertexIndex;
+extern vector<int> permulation;
+extern int write_num;
+
 QString Compression_Valence_Component::Main_Function(Polyhedron &_pMesh,
                                                      const char *_Input_File_Name,
                                                      const char *_File_Name,
@@ -882,6 +886,10 @@ int Compression_Valence_Component::Decimation_Conquest(Polyhedron &_pMesh,
                 Point_Int BC = Change_Real_Int(Barycenter, Component_ID);
 
                 // remove the front vertex
+				
+				//!todo store vertex at last element
+				int index = vertexIndex.at(&(g->next()->next().vertex()));
+				permulation[--write_num] = index;
                 _pMesh.erase_center_vertex(g->next());
 
                 g = h;

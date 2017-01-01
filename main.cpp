@@ -2,7 +2,10 @@
 #include "compression/Compression_Valence_Component.h"
 #include <fstream>
 using namespace std;
-map<Vertex*, int, ptr_less(Vertex)> vertexIndex;
+map<Vertex*, int> vertexIndex;
+vector<int> permulation;
+int write_num;
+
 int main(int argc, char **argv) {
     if (1) {
         if (argc != 3) {
@@ -75,6 +78,10 @@ int main(int argc, char **argv) {
         PolyhedronPtr mesh_ptr(new Polyhedron());
         mesh_ptr->load_mesh_obj(input_file_name);
 
+		//set permulation
+		write_num = mesh_ptr->size_of_vertices();
+		permulation.resize(write_num);
+		
         // set map
         Vertex_iterator pVertex = NULL;
         int i = 0;
