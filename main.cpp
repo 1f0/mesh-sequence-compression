@@ -1,9 +1,8 @@
 #include <iostream>
 #include "compression/Compression_Valence_Component.h"
 #include <fstream>
-
 using namespace std;
-
+map<Vertex*, int, ptr_less(Vertex)> vertexIndex;
 int main(int argc, char **argv) {
     if (1) {
         if (argc != 3) {
@@ -76,6 +75,15 @@ int main(int argc, char **argv) {
         PolyhedronPtr mesh_ptr(new Polyhedron());
         mesh_ptr->load_mesh_obj(input_file_name);
 
+        // set map
+        Vertex_iterator pVertex = NULL;
+        int i = 0;
+        for (pVertex = pMesh.vertices_begin(); pVertex != pMesh.vertices_end(); i++, pVertex++) {
+            cout << i << " " << pVertex->point().x()
+                << " " << pVertex->point().y()
+                << " " << pVertex->point().x();
+        }
+        
         Compression_Valence_Component cv(mesh_ptr);
         cout << cv.Main_Function(
                 *mesh_ptr,

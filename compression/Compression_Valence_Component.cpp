@@ -977,8 +977,6 @@ int Compression_Valence_Component::Decimation_Conquest(Polyhedron &_pMesh,
             Halfedge_handle First_border_edge;
             Halfedge_handle Standard_edge;
 
-
-
             // To find first border edge.
             Halfedge_around_vertex_circulator Hvc = g->next()->vertex()->vertex_begin();
             Halfedge_around_vertex_circulator Hvc_end = Hvc;
@@ -2748,6 +2746,7 @@ void Compression_Valence_Component::Simplification(Polyhedron &_pMesh,
     _pMesh.compute_normals();
 }
 
+//write out p3d with ac_codec
 void Compression_Valence_Component::Compression(Polyhedron &_pMesh,
                                                 const char *File_Name,
                                                 const int &_Qbit,
