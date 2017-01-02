@@ -109,12 +109,9 @@ int main(int argc, char **argv) {
                 is_bijection_selected
         ).toStdString() << endl;
 		
-		vector<int> re_permulation(permulation.size());
-		for(int i=0; i < permulation.size();i++)
-			re_permulation[permulation[i]] = i;
 		ofstream fout(string(input_file_name)+".map");
 		for(int i=0;i<permulation.size();i++)
-			fout<<re_permulation[i]+1<<endl;
+			fout<<permulation[i]+1<<endl;
 		fout.close();
     }
 

@@ -972,12 +972,11 @@ int Compression_Valence_Component::Decimation_Conquest(Polyhedron &_pMesh,
                     Halfedges.push(h->prev()->opposite());
             }
         }
-            // border edge.
+        // border edge.
         else if ((h->next()->vertex()->Vertex_Flag == FREE) &&
                  (valence >= 3) &&
                  (valence <= 4) &&
                  (Is_Border_Vertex(h->next()) == true)) {
-            /*****    conditions of vertex removal (based on area) will be added    *****/
             /*****    conditions of vertex removal (based on area) will be added    *****/
 
             type = Find_Type(h, valence);
@@ -1046,25 +1045,6 @@ int Compression_Valence_Component::Decimation_Conquest(Polyhedron &_pMesh,
                 if (Standard_edge->prev()->opposite()->vertex_degree() == 2)
                     Check_border_structure = false;
 
-            /*if (Check_border_structure)
-        {
-        if(valence == 3)
-        {
-        if(Is_Border_Vertex(g))
-        {
-        if(g->opposite()->vertex_degree() == 3)
-        Check_border_structure = false;
-        }
-        else
-        {
-        if(g->vertex_degree() == 3)
-        Check_border_structure = false;
-        }
-        }
-        }*/
-
-
-
             // Structure of triangles is good -> decimation.
             if (Check_border_structure) {
                 Number_vertices++;
@@ -1077,12 +1057,16 @@ int Compression_Valence_Component::Decimation_Conquest(Polyhedron &_pMesh,
                 Point3d Real_vertex_position = h->next()->vertex()->point();
                 Point_Int Vertex_position = Change_Real_Int(Real_vertex_position, Component_ID);
 
+				// added by Minliang LIN
+				int index = vertexIndex.at(&(h->next()->vertex()->point()));
+                write_num--;
+				temp_array.push_back(index);
+
                 Color_Unit Removed_vertex_color;
                 //int Vertex_color_index = -1;
                 if ((this->IsColored) && (!this->IsOneColor)) {
                     Removed_vertex_color = Get_Vertex_Color(h->next());
                 }
-
 
                 vector<Halfedge_handle> Border_edges;
                 int Number_jump = 0;
@@ -1478,7 +1462,6 @@ int Compression_Valence_Component::Regulation(Polyhedron &_pMesh,
                 Point3d Barycenter = Barycenter_Patch_Before_Removal(g);
                 Point_Int BC = Change_Real_Int(Barycenter, Component_ID);
 
-
                 if ((this->IsColored) && (!this->IsOneColor)) {
                     Color_Unit Removed_vertex_color;
 
@@ -1605,6 +1588,7 @@ int Compression_Valence_Component::Regulation(Polyhedron &_pMesh,
             temp->facet()->Component_Number = Component_ID;
         }
     }
+
 
 	for(int i=0; i<temp_array.size(); i++){
 		permulation[write_num+i] = temp_array[i];
