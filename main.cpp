@@ -2,12 +2,12 @@
 #include "compression/Compression_Valence_Component.h"
 #include <fstream>
 using namespace std;
-map<Vertex*, int> vertexIndex;
+map<Point3d*, int> vertexIndex;
 vector<int> permulation;
 int write_num;
 
 int main(int argc, char **argv) {
-    if (1) {
+    if (0) {
         if (argc != 3) {
             cout << "Usage: " << argv[0]
                  << " Input_file[input.p3d] Output_file_Prefix[output]" << endl;
@@ -61,7 +61,7 @@ int main(int argc, char **argv) {
 
         char *input_file_name = argv[1];
         char *output_file_name = argv[2];
-        int q_bit = 10;
+        int q_bit = 15;
 
         int n_vertices;
         sscanf(argv[3], "%d", &n_vertices);
@@ -85,10 +85,11 @@ int main(int argc, char **argv) {
         // set map
         Vertex_iterator pVertex = NULL;
         int i = 0;
-        for (pVertex = pMesh.vertices_begin(); pVertex != pMesh.vertices_end(); i++, pVertex++) {
-            cout << i << " " << pVertex->point().x()
-                << " " << pVertex->point().y()
-                << " " << pVertex->point().x();
+        for (pVertex = mesh_ptr->vertices_begin(); pVertex != mesh_ptr->vertices_end(); i++, pVertex++) {
+            //cout << i << " " << pVertex->point().x()
+            //    << " " << pVertex->point().y()
+            //    << " " << pVertex->point().z()<<endl;
+			vertexIndex[&(pVertex->point())] = i;
         }
         
         Compression_Valence_Component cv(mesh_ptr);
@@ -107,6 +108,14 @@ int main(int argc, char **argv) {
                 is_adaptive_quantization_selected,
                 is_bijection_selected
         ).toStdString() << endl;
+		
+		vector<int> re_permulation(permulation.size());
+		for(int i=0; i < permulation.size();i++)
+			re_permulation[permulation[i]] = i;
+		ofstream fout(string(input_file_name)+".map");
+		for(int i=0;i<permulation.size();i++)
+			fout<<re_permulation[i]+1<<endl;
+		fout.close();
     }
 
     return 0;

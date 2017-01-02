@@ -3,3 +3,16 @@
 
 # CMake
 cmake-build-debug
+Makefile
+CMakefiles
+CMakeCache.txt
+
+
+# generate
+*.obj
+*.map
+*.p3d
+*.swp
+*.cmake
+meshZip
+unpack
