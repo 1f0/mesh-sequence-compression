@@ -14,6 +14,10 @@ set(SRC2 ptb_pack.cpp
 		compression/arithmetic_codec.cpp)
 add_executable(ptb_pack ${SRC2}) 
 
+set(SRC3 ptb_unpack.cpp
+		compression/arithmetic_codec.cpp)
+add_executable(ptb_unpack ${SRC3})
+
 set(CMAKE_AUTOMOC ON)
 find_package(Qt4 REQUIRED QtCore)
 include_directories(Qt4::QtCore)

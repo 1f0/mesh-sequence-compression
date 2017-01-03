@@ -83,9 +83,9 @@ int main(int argc, char **argv) {
     Arithmetic_Codec enc(AC_BUFFER);
     enc.start_encoder();
     
-    Adaptive_Data_Model model[3];
-    for(int i=0; i<3; i++)
-        model[i].set_alphabet(axis3[i].range);
+    // Adaptive_Data_Model model[3];
+    // for(int i=0; i<3; i++)
+    //     model[i].set_alphabet(axis3[i].range);
 
     cout<<"vertices:"<<num<<endl;
     cout<<"x_min:"<<axis3[0].min<<endl;
@@ -97,7 +97,8 @@ int main(int argc, char **argv) {
 
     for(int i=0; i<3; i++){
         for(int j=0; j<axis3[i].quant.size(); j++){
-            enc.encode(axis3[i].quant[j], model[i]);
+            cout << axis3[i].quant[j] <<endl;
+            enc.put_bits(axis3[i].quant[j], axis3[i].qbit);
         }
     }
 

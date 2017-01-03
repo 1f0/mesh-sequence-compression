@@ -50,7 +50,6 @@ int gg_cnt = 0;
 
 #include <stdlib.h>
 #include <iostream>
-#include <QTS>
 #include "arithmetic_codec.h"
 
 
