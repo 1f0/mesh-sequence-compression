@@ -7,7 +7,7 @@
 
 using namespace std;
 
-const int Qbit = 10;
+const int Qbit = 5;
 
 class Axis{
 public:
@@ -80,11 +80,15 @@ int main(int argc, char **argv) {
     for(int i=0; i<3; i++)
         model[i].set_alphabet(axis3[i].range);
 
-    cout<<axis3[0].step<<endl;
-    cout<<axis3[0].min<<endl;
+    cout<<"x_min:"<<axis3[0].min<<endl;
+    cout<<"xstep:"<<axis3[0].step<<endl;
+    cout<<"y_min:"<<axis3[1].min<<endl;
+    cout<<"ystep:"<<axis3[1].step<<endl;
+    cout<<"z_min:"<<axis3[2].min<<endl;
+    cout<<"zstep:"<<axis3[2].step<<endl;
+
     for(int j=0; j<axis3[0].quant.size(); j++){
         for(int i=0; i<3; i++){
-            if(i==0)cout<<axis3[i].quant[j]<<endl;
             enc.encode(axis3[i].quant[j], model[i]);
         }    
     }

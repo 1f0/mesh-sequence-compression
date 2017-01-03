@@ -14,5 +14,7 @@ CMakeCache.txt
 *.p3d
 *.swp
 *.cmake
+*.ac
+*.ptb
 meshZip
 unpack
