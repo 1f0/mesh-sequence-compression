@@ -7,7 +7,7 @@
 
 using namespace std;
 
-const int Qbit = 5;
+int Qbit = 8;
 
 class Axis{
 public:
@@ -31,7 +31,7 @@ void quantization(Axis &axi) {
 	}
     axi.qbit = Qbit;
     axi.range = (int)powf(2, Qbit);
-    float step = (max - min) / axi.range;
+    float step = (max - min) / (axi.range - 1);
 
     for(int i=0; i < axi.orig.size(); i++) {
         axi.quant.push_back((int)floorf((axi.orig[i]-min)/step));
@@ -42,21 +42,26 @@ void quantization(Axis &axi) {
 }
 
 int main(int argc, char **argv) {
-	if (argc != 2) {
+	if(argc == 3) Qbit = atoi(argv[2]);
+    else if (argc != 2) {
 		cout << "Usage: " << argv[0]
-             << "input.ptb" << endl;
+             << "input.ptb [Qbit]" << endl;
         exit(1);
 	}
-	
+
 	const char *input_name = argv[1];
 	FILE* fin = fopen(input_name, "rb");
     Axis axis3[3];
-    do{
+    while(1) {
         float coord;
-        fread(&coord, sizeof(float), 1, fin);
-        for(int i=0; i<3; i++)
+        int cnt;
+        for(int i=0; i<3; i++){
+            cnt = fread(&coord, sizeof(float), 1, fin);
+            if(cnt <= 0) break;
             axis3[i].orig.push_back(coord);
-    }while(!feof(fin));
+        }
+        if(cnt <= 0)break;
+    }
     fclose(fin);
 
     for(int i=0; i<3; i++)
@@ -67,6 +72,8 @@ int main(int argc, char **argv) {
     const char* out_name_c = out_name.c_str();
     FILE* fout = fopen(out_name_c, "wb");
 
+    int num = axis3[0].quant.size();
+    fwrite(&num, sizeof(int), 1, fout);
     for(int i=0; i<3; i++){
         fwrite(&axis3[i].qbit, sizeof(int), 1, fout);
         fwrite(&axis3[i].min, sizeof(float), 1, fout);
@@ -80,6 +87,7 @@ int main(int argc, char **argv) {
     for(int i=0; i<3; i++)
         model[i].set_alphabet(axis3[i].range);
 
+    cout<<"vertices:"<<num<<endl;
     cout<<"x_min:"<<axis3[0].min<<endl;
     cout<<"xstep:"<<axis3[0].step<<endl;
     cout<<"y_min:"<<axis3[1].min<<endl;
@@ -87,10 +95,10 @@ int main(int argc, char **argv) {
     cout<<"z_min:"<<axis3[2].min<<endl;
     cout<<"zstep:"<<axis3[2].step<<endl;
 
-    for(int j=0; j<axis3[0].quant.size(); j++){
-        for(int i=0; i<3; i++){
+    for(int i=0; i<3; i++){
+        for(int j=0; j<axis3[i].quant.size(); j++){
             enc.encode(axis3[i].quant[j], model[i]);
-        }    
+        }
     }
 
     enc.write_to_file(fout);

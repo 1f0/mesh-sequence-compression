@@ -546,7 +546,6 @@ unsigned Arithmetic_Codec::stop_encoder(void) {
 
 unsigned Arithmetic_Codec::write_to_file(FILE *code_file) {
     unsigned header_bytes = 0, code_bytes = stop_encoder(), nb = code_bytes;
-
     // write variable-length header with number of code bytes
     do {
         int file_byte = int(nb & 0x7FU);
@@ -555,6 +554,7 @@ unsigned Arithmetic_Codec::write_to_file(FILE *code_file) {
             AC_Error("cannot write compressed data to file");
         header_bytes++;
     } while (nb);
+
     // write compressed data
     if (fwrite(code_buffer, 1, code_bytes, code_file) != code_bytes)
         AC_Error("cannot write compressed data to file");
