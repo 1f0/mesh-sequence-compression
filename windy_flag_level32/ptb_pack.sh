@@ -1,5 +1,5 @@
 #!/bin/bash
-for filename in ./*.ptb; do
+for filename in obj/*.ptb; do
 	./ptb_pack $filename
 done
 

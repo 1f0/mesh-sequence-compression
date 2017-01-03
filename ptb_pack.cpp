@@ -97,7 +97,6 @@ int main(int argc, char **argv) {
 
     for(int i=0; i<3; i++){
         for(int j=0; j<axis3[i].quant.size(); j++){
-            cout << axis3[i].quant[j] <<endl;
             enc.put_bits(axis3[i].quant[j], axis3[i].qbit);
         }
     }
