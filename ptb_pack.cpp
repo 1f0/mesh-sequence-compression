@@ -1,131 +1,45 @@
 #include <iostream>
 #include <fstream>
+#include <vector>
+#include <cmath>
 #include <arithmetic_codec.h>
 #define AC_BUFFER 1024 * 10000
 
-void Calculate_Geometry_Offset_Range() {
-    for (int Component_ID = 0; Component_ID < this->NumberComponents; Component_ID++) {
-        list<int>::iterator Number_iterator = this->NumberVertices[Component_ID].begin();
-        list<Point_Int>::iterator Vertex_iterator = this->Geometry[Component_ID].begin();
+using namespace std;
 
-        unsigned Number_phases = this->NumberVertices[Component_ID].size();
+const int Qbit = 10;
 
+class Axis{
+public:
+    vector<float> orig;
+    vector<int> quant;
+    int qbit;
+    int range;
+    float step, min;
+};
 
-        for (unsigned i = 0; i < Number_phases; i++) {
-            int Number_vertices_layer = *Number_iterator;
-            Number_iterator++;
+void quantization(Axis &axi) {
+	float max = -50000, min = 50000;//infinity
 
-            int alpha_max = -10000;
-            int alpha_min = 10000;
-            int gamma_max = -10000;
-            int gamma_min = 10000;
-            int alpha = 0, beta = 0, gamma = 0;
-
-
-            if (Number_vertices_layer != 0) {
-                for (int j = 0; j < Number_vertices_layer; j++) {
-                    alpha = Vertex_iterator->x;
-                    if (alpha > alpha_max)
-                        alpha_max = alpha;
-                    if (alpha < alpha_min)
-                        alpha_min = alpha;
-
-                    beta = Vertex_iterator->y;
-                    if (beta > alpha_max)
-                        alpha_max = beta;
-                    if (beta < alpha_min)
-                        alpha_min = beta;
-
-                    gamma = Vertex_iterator->z;
-                    if (gamma > gamma_max)
-                        gamma_max = gamma;
-                    if (gamma < gamma_min)
-                        gamma_min = gamma;
-
-                    Vertex_iterator++;
-                }
-
-                this->AlphaRange[Component_ID].push_back(alpha_max - alpha_min + 1);
-                this->AlphaOffset[Component_ID].push_back(-alpha_min);
-
-                this->GammaRange[Component_ID].push_back(gamma_max - gamma_min + 1);
-                this->GammaOffset[Component_ID].push_back(-gamma_min);
-            } else {
-                this->AlphaRange[Component_ID].push_back(0);
-                this->AlphaOffset[Component_ID].push_back(0);
-
-                this->GammaRange[Component_ID].push_back(0);
-                this->GammaOffset[Component_ID].push_back(0);
-            }
+    for(int i=0; i < axi.orig.size(); i++) {
+		if(axi.orig[i] > max) {
+            max = axi.orig[i];
         }
+        if(axi.orig[i] < min) {
+            min = axi.orig[i];
+        }
+	}
+    axi.qbit = Qbit;
+    axi.range = (int)powf(2, Qbit);
+    float step = (max - min) / axi.range;
+
+    for(int i=0; i < axi.orig.size(); i++) {
+        axi.quant.push_back((int)floorf((axi.orig[i]-min)/step));
     }
 
-
-
-    /* Calculate alpha_min and gamma_min of all coefficients
-   * in order to prevent negative symbols.Compression is not possible. */
-    list<int>::iterator it_gamma, it_alpha;
-    for (int Component_ID = 0; Component_ID < this->NumberComponents; Component_ID++) {
-        for (it_alpha = this->AlphaOffset[Component_ID].begin();
-             it_alpha != this->AlphaOffset[Component_ID].end(); it_alpha++) {
-            if (*it_alpha < this->Smallest_Alpha)
-                this->Smallest_Alpha = *it_alpha;
-        }
-        for (it_gamma = this->GammaOffset[Component_ID].begin();
-             it_gamma != this->GammaOffset[Component_ID].end(); it_gamma++) {
-            if (*it_gamma < this->Smallest_Gamma)
-                this->Smallest_Gamma = *it_gamma;
-        }
-    }
-
-
-    if (this->IsColored) {
-
-        int C0_min = 50000, C1_min = 50000, C2_min = 50000;
-        int C0_max = -50000, C1_max = -50000, C2_max = -50000;
-
-        for (int Component_ID = 0; Component_ID < this->NumberComponents; Component_ID++) {
-            //#ifdef PREDICTION_METHOD
-            list<Color_Unit>::iterator Vertex_color_iterator;
-            for (Vertex_color_iterator = this->VertexColor[Component_ID].begin();
-                 Vertex_color_iterator != this->VertexColor[Component_ID].end(); Vertex_color_iterator++)
-                //#endif
-            {
-                if (Vertex_color_iterator->c0 < C0_min)
-                    C0_min = Vertex_color_iterator->c0;
-                if (Vertex_color_iterator->c0 > C0_max)
-                    C0_max = Vertex_color_iterator->c0;
-
-                if (Vertex_color_iterator->c1 < C1_min)
-                    C1_min = Vertex_color_iterator->c1;
-                if (Vertex_color_iterator->c1 > C1_max)
-                    C1_max = Vertex_color_iterator->c1;
-
-                if (Vertex_color_iterator->c2 < C2_min)
-                    C2_min = Vertex_color_iterator->c2;
-                if (Vertex_color_iterator->c2 > C2_max)
-                    C2_max = Vertex_color_iterator->c2;
-            }
-
-        }
-
-
-        this->C0_Range = C0_max - C0_min + 1;
-        this->C1_Range = C1_max - C1_min + 1;
-        this->C2_Range = C2_max - C2_min + 1;
-
-        if (this->C0_Range <= 1) this->C0_Range = 2;
-        if (this->C1_Range <= 1) this->C1_Range = 2;
-        if (this->C2_Range <= 1) this->C2_Range = 2;
-
-        this->Smallest_C0 = C0_min;
-        this->Smallest_C1 = C1_min;
-        this->Smallest_C2 = C2_min;
-    }
+    axi.min = min;
+    axi.step = step;
 }
-
-
-
 
 int main(int argc, char **argv) {
 	if (argc != 2) {
@@ -135,8 +49,49 @@ int main(int argc, char **argv) {
 	}
 	
 	const char *input_name = argv[1];
-	
+	FILE* fin = fopen(input_name, "rb");
+    Axis axis3[3];
+    do{
+        float coord;
+        fread(&coord, sizeof(float), 1, fin);
+        for(int i=0; i<3; i++)
+            axis3[i].orig.push_back(coord);
+    }while(!feof(fin));
+    fclose(fin);
 
+    for(int i=0; i<3; i++)
+        quantization(axis3[i]);
+
+    string out_name(input_name);
+    out_name += ".ac";
+    const char* out_name_c = out_name.c_str();
+    FILE* fout = fopen(out_name_c, "wb");
+
+    for(int i=0; i<3; i++){
+        fwrite(&axis3[i].qbit, sizeof(int), 1, fout);
+        fwrite(&axis3[i].min, sizeof(float), 1, fout);
+        fwrite(&axis3[i].step, sizeof(float), 1, fout);
+    }
+
+    Arithmetic_Codec enc(AC_BUFFER);
+    enc.start_encoder();
+    
+    Adaptive_Data_Model model[3];
+    for(int i=0; i<3; i++)
+        model[i].set_alphabet(axis3[i].range);
+
+    cout<<axis3[0].step<<endl;
+    cout<<axis3[0].min<<endl;
+    for(int j=0; j<axis3[0].quant.size(); j++){
+        for(int i=0; i<3; i++){
+            if(i==0)cout<<axis3[i].quant[j]<<endl;
+            enc.encode(axis3[i].quant[j], model[i]);
+        }    
+    }
+
+    enc.write_to_file(fout);
+    fclose(fout);
 
 	return 0;
 }
+

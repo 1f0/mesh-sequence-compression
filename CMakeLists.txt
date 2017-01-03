@@ -10,6 +10,10 @@ set(SOURCE_FILES main.cpp
         compression/polyhedron/mesh.cpp)
 add_executable(${PRJ_NAME} ${SOURCE_FILES})
 
+set(SRC2 ptb_pack.cpp
+		compression/arithmetic_codec.cpp)
+add_executable(ptb_pack ${SRC2}) 
+
 set(CMAKE_AUTOMOC ON)
 find_package(Qt4 REQUIRED QtCore)
 include_directories(Qt4::QtCore)
@@ -17,12 +21,11 @@ include_directories(Qt4::QtCore)
 find_package(CGAL COMPONENTS Core)
 INCLUDE(${CGAL_USE_FILE})
 
-find_package(OpenGL REQUIRED)
-include_directories(${OPENGL_INCLUDE_DIR})
-
 # link external library
 target_link_libraries(${PRJ_NAME} Qt4::QtCore)
 target_link_libraries(${PRJ_NAME} ${CGAL_LIBRARIES} ${CGAL_3RD_PARTY_LIBRARIES})
+
+target_link_libraries(ptb_pack Qt4::QtCore)
 
 # similiar to "gcc -l", search head file
 include_directories(compression)
