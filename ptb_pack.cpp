@@ -34,6 +34,7 @@ void quantization(Axis &axi) {
     float step = (max - min) / (axi.range - 1);
 
     for(int i=0; i < axi.orig.size(); i++) {
+        cout << axi.orig[i] <<endl;
         axi.quant.push_back((int)floorf((axi.orig[i]-min)/step));
     }
 

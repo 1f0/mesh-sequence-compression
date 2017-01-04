@@ -11,12 +11,12 @@ def readObj(fname):
     f.close()
     return verts
 
-base_verts = readObj('0000_00.obj')
+base_verts = readObj('obj/0000_00.obj')
 def diffVert(a, b):
     return tuple(x-y for x,y in zip(a,b))
 
 vert_map = []
-f_map = open('0000_00.obj.map')
+f_map = open('obj/0000_00.obj.map')
 for line in f_map:
     vert_map.append(int(line))
 
@@ -27,26 +27,30 @@ def shuffle(arr):
     return new_arr
 
 from array import array
+def write_to_file(diff_verts, fout):
+    for vert in diff_verts:
+        float_array = array('f', vert)
+        float_array.tofile(fout)
 
 for i in xrange(32):
-    name_in = '%04d_00.obj' % (i+1)
+    name_in = 'obj/%04d_00.obj' % (i+1)
     print name_in
     verts = readObj(name_in)
 
-    name_out = '%d.ptb' % (i+1)
-    f_out = open(name_out, 'wb')
+    name_out = 'obj/%d.ptb' % (i+1)
+    fout = open(name_out, 'wb')
 
     diff_verts = tuple(diffVert(a,b) for a,b in zip(verts, base_verts))
     diff_verts = shuffle(diff_verts)
 
-    cnt = 0
-    for vert in diff_verts:
-        cnt = cnt + 1
-        if(cnt<30):
-            print vert
-        float_array = array('f', vert)
-        float_array.tofile(f_out)
-
+    write_to_file(diff_verts, fout)
     base_verts = verts
+
+# loop back
+verts = readObj('obj/0000_00.obj')
+fout = open('obj/0.ptb', 'wb')
+diff_verts = tuple(diffVert(a,b) for a,b in zip(verts, base_verts))
+write_to_file(diff_verts, fout)
+
 
     
