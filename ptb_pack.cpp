@@ -34,7 +34,6 @@ void quantization(Axis &axi) {
     float step = (max - min) / (axi.range - 1);
 
     for(int i=0; i < axi.orig.size(); i++) {
-        cout << axi.orig[i] <<endl;
         axi.quant.push_back((int)floorf((axi.orig[i]-min)/step));
     }
 
@@ -87,7 +86,7 @@ int main(int argc, char **argv) {
     // Adaptive_Data_Model model[3];
     // for(int i=0; i<3; i++)
     //     model[i].set_alphabet(axis3[i].range);
-
+    cout<<input_name<<endl;
     cout<<"vertices:"<<num<<endl;
     cout<<"x_min:"<<axis3[0].min<<endl;
     cout<<"xstep:"<<axis3[0].step<<endl;

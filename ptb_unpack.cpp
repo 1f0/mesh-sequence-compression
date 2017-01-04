@@ -43,7 +43,7 @@ int main(int argc, char **argv) {
 
     for(int i=0; i<3; i++){
         for(int j=0; j<num; j++){
-            cout << dec.get_bits(axis3[i].qbit) <<endl;
+            cout << dec.get_bits(axis3[i].qbit)*axis3[i].step + axis3[i].min <<endl;
         }
     }
 
