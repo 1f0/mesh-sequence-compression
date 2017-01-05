@@ -73,7 +73,7 @@ int main(int argc, char **argv) {
         int forget_value = 0;
         bool is_compression_selected = true;
         bool is_adaptive_quantization_selected = false;
-        bool is_bijection_selected = true;
+        bool is_bijection_selected = false;
 
         PolyhedronPtr mesh_ptr(new Polyhedron());
         mesh_ptr->load_mesh_obj(input_file_name);
