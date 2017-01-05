@@ -26,7 +26,7 @@
 const int MINIMUM_PREDICTION_NUMBER = 3;
 const int LIMIT_NUMBER = 50;
 
-extern map<Point3d*, int> vertexIndex;
+extern map<Point3d *, int> vertexIndex;
 extern vector<int> permulation;
 extern int write_num;
 
@@ -790,7 +790,7 @@ int Compression_Valence_Component::Decimation_Conquest(Polyhedron &_pMesh,
 
     Halfedge_handle h; // The current gate
 
-	vector<int> temp_array;
+    vector<int> temp_array;
 
     /// Main loop
     while (!Halfedges.empty()) {
@@ -888,13 +888,13 @@ int Compression_Valence_Component::Decimation_Conquest(Polyhedron &_pMesh,
                 Point_Int BC = Change_Real_Int(Barycenter, Component_ID);
 
                 // remove the front vertex
-				
-				//!todo store vertex at last element
-				int index = vertexIndex.at(&(g->next()->vertex()->point()));
-                write_num--;
-				temp_array.push_back(index);
 
-				_pMesh.erase_center_vertex(g->next());
+                //!todo store vertex at last element
+                int index = vertexIndex.at(&(g->next()->vertex()->point()));
+                write_num--;
+                temp_array.push_back(index);
+
+                _pMesh.erase_center_vertex(g->next());
 
                 g = h;
                 g->facet()->Facet_Flag = TEMP_FLAG;
@@ -972,7 +972,7 @@ int Compression_Valence_Component::Decimation_Conquest(Polyhedron &_pMesh,
                     Halfedges.push(h->prev()->opposite());
             }
         }
-        // border edge.
+            // border edge.
         else if ((h->next()->vertex()->Vertex_Flag == FREE) &&
                  (valence >= 3) &&
                  (valence <= 4) &&
@@ -1057,10 +1057,10 @@ int Compression_Valence_Component::Decimation_Conquest(Polyhedron &_pMesh,
                 Point3d Real_vertex_position = h->next()->vertex()->point();
                 Point_Int Vertex_position = Change_Real_Int(Real_vertex_position, Component_ID);
 
-				// added by Minliang LIN
-				int index = vertexIndex.at(&(h->next()->vertex()->point()));
+                // added by Minliang LIN
+                int index = vertexIndex.at(&(h->next()->vertex()->point()));
                 write_num--;
-				temp_array.push_back(index);
+                temp_array.push_back(index);
 
                 Color_Unit Removed_vertex_color;
                 //int Vertex_color_index = -1;
@@ -1325,9 +1325,9 @@ int Compression_Valence_Component::Decimation_Conquest(Polyhedron &_pMesh,
         }
     }
 
-	for(int j=0;j<temp_array.size();j++)
-		permulation[write_num+j] = temp_array[j];
-		
+    for (int j = 0; j < temp_array.size(); j++)
+        permulation[write_num + j] = temp_array[j];
+
 
     if ((this->IsColored) && (!this->IsOneColor)) {
         while (!this->InterVertexColor.empty()) {
@@ -1402,7 +1402,7 @@ int Compression_Valence_Component::Regulation(Polyhedron &_pMesh,
 
     Halfedge_handle h;
 
-	vector<int> temp_array;
+    vector<int> temp_array;
 
     while (!Halfedges.empty()) {
         h = Halfedges.front();
@@ -1515,13 +1515,13 @@ int Compression_Valence_Component::Regulation(Polyhedron &_pMesh,
 
                 g = h->next();
 
-				int index;
-				
-				if (g->vertex()->Vertex_Flag != TO_BE_REMOVED) {
-					index = vertexIndex.at(&(g->vertex()->point()));
-					--write_num;
-					temp_array.push_back(index);
-				}
+                int index;
+
+                if (g->vertex()->Vertex_Flag != TO_BE_REMOVED) {
+                    index = vertexIndex.at(&(g->vertex()->point()));
+                    --write_num;
+                    temp_array.push_back(index);
+                }
 
                 g->vertex()->Vertex_Flag = TO_BE_REMOVED;
                 g->facet()->Facet_Flag = TO_BE_REMOVED;
@@ -1584,15 +1584,15 @@ int Compression_Valence_Component::Regulation(Polyhedron &_pMesh,
         if (vh->Vertex_Flag == TO_BE_REMOVED) {
             Halfedge_handle temp = vh->halfedge();
 
-			temp = _pMesh.erase_center_vertex(temp);
+            temp = _pMesh.erase_center_vertex(temp);
             temp->facet()->Component_Number = Component_ID;
         }
     }
 
 
-	for(int i=0; i<temp_array.size(); i++){
-		permulation[write_num+i] = temp_array[i];
-	}
+    for (int i = 0; i < temp_array.size(); i++) {
+        permulation[write_num + i] = temp_array[i];
+    }
 
     if ((this->IsColored) && (!this->IsOneColor)) {
         while (!this->InterVertexColor.empty()) {
@@ -1683,16 +1683,16 @@ Compression_Valence_Component::Un_Regulation(Polyhedron &_pMesh, Arithmetic_Code
     int mycnt = 0;
     while (!Halfedges.empty()) {
         mycnt++;
-        if(this->Decompress_count==1)
-            cout<<Halfedges.size()<<endl;
+        if (this->Decompress_count == 1)
+            cout << Halfedges.size() << endl;
         h = Halfedges.front();
         Halfedges.pop();
 
-        if(mycnt==158){
-            cout<<"---"<<this->Decompress_count<<endl;
-            cout<<h->vertex()->point().x()<<endl;
-            cout<<h->vertex()->point().y()<<endl;
-            cout<<h->vertex()->point().z()<<endl;
+        if (mycnt == 158) {
+            cout << "---" << this->Decompress_count << endl;
+            cout << h->vertex()->point().x() << endl;
+            cout << h->vertex()->point().y() << endl;
+            cout << h->vertex()->point().z() << endl;
         }
 
         if ((h->facet()->Facet_Flag == CONQUERED) || (h->facet()->Facet_Flag == TO_BE_REMOVED))// already visited.
@@ -1928,8 +1928,8 @@ void Compression_Valence_Component::Un_Decimation_Conquest(Polyhedron &_pMesh,
 
     while (!Halfedges.empty()) {
         cnt++;
-        if(cnt == 16){
-            cout<<"tired"<<endl;
+        if (cnt == 16) {
+            cout << "tired" << endl;
         }
 
 
@@ -2532,12 +2532,12 @@ Compression_Valence_Component::Write_Base_Mesh(Polyhedron &_pMesh, Arithmetic_Co
     // Encoding of vertex information of base mesh //
     for (Vertex_iterator pVertex = _pMesh.vertices_begin();
          pVertex != _pMesh.vertices_end(); Basemesh_vertex_number++, pVertex++) {
-        
-				
-		int index = vertexIndex.at(&(pVertex->point()));
-		permulation[Basemesh_vertex_number] = index;		
 
-		pVertex->Vertex_Number = Basemesh_vertex_number;
+
+        int index = vertexIndex.at(&(pVertex->point()));
+        permulation[Basemesh_vertex_number] = index;
+
+        pVertex->Vertex_Number = Basemesh_vertex_number;
 
         //int SEDD = pVertex->Seed_Edge;
 
