@@ -1,14 +1,22 @@
 cmake_minimum_required(VERSION 3.5)
 set(PRJ_NAME meshZip)
+set(COMPRESS pack15q)
+set(DECOMPRESS unpack)
 project(${PRJ_NAME})
 
 set(CMAKE_CXX_STANDARD 11)
 
-set(SOURCE_FILES main.cpp
+set(SOURCE_FILES compress.cpp
         compression/Compression_Valence_Component.cpp
         compression/arithmetic_codec.cpp
         compression/polyhedron/mesh.cpp)
-add_executable(${PRJ_NAME} ${SOURCE_FILES})
+add_executable(${COMPRESS} ${SOURCE_FILES})
+
+set(SOURCE_FILES2 decompress.cpp
+		compression/Compression_Valence_Component.cpp
+		compression/arithmetic_codec.cpp
+		compression/polyhedron/mesh.cpp)
+add_executable(${DECOMPRESS} ${SOURCE_FILES2})
 
 set(SRC2 ptb_pack.cpp
 		compression/arithmetic_codec.cpp)
@@ -26,8 +34,11 @@ find_package(CGAL COMPONENTS Core)
 INCLUDE(${CGAL_USE_FILE})
 
 # link external library
-target_link_libraries(${PRJ_NAME} Qt4::QtCore)
-target_link_libraries(${PRJ_NAME} ${CGAL_LIBRARIES} ${CGAL_3RD_PARTY_LIBRARIES})
+target_link_libraries(${COMPRESS} Qt4::QtCore)
+target_link_libraries(${COMPRESS} ${CGAL_LIBRARIES} ${CGAL_3RD_PARTY_LIBRARIES})
+
+target_link_libraries(${DECOMPRESS} Qt4::QtCore)
+target_link_libraries(${DECOMPRESS} ${CGAL_LIBRARIES} ${CGAL_3RD_PARTY_LIBRARIES})
 
 target_link_libraries(ptb_pack Qt4::QtCore)
 
