@@ -701,10 +701,12 @@ Adaptive_Data_Model::~Adaptive_Data_Model(void) {
 }
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
 void Adaptive_Data_Model::set_alphabet(unsigned number_of_symbols) {
-    if ((number_of_symbols < 2) || (number_of_symbols > (1 << 13)))
+    if ((number_of_symbols < 2) || (number_of_symbols > (1 << 13))) {
+        std::cout<<"set alphabet"<<std::endl;
+        std::cout<<number_of_symbols<<std::endl;
         AC_Error("invalid number of data symbols");
+    }
 
     if (data_symbols != number_of_symbols) {     // assign memory for data model
         data_symbols = number_of_symbols;

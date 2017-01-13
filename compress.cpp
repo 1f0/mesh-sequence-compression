@@ -16,7 +16,7 @@ int main(int argc, char **argv) {
 
     char *input_file_name = argv[1];
     char *output_file_name = argv[2];
-    int q_bit = 15;
+    int q_bit = 10;
 
     int n_vertices;
     sscanf(argv[3], "%d", &n_vertices);
