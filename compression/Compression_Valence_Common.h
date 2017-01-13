@@ -2395,21 +2395,10 @@ Color_Unit Get_Average_Vertex_Color_Lee(const Halfedge_handle &h, const int &val
  */
 
 int rcnt = 0;
+
 bool Remove_Edges(Polyhedron &pMesh, const Halfedge_handle &h, const int &type) {
-    rcnt++;
-
-
-
     bool check = false;
     Halfedge_handle g = h;
-
-    if(rcnt == 16){
-        cout<<"my "<<g->next()->opposite()->is_border()<<endl;
-        cout<<g->next()->opposite()->vertex()->point().x()<<" ";
-        cout<<g->next()->opposite()->vertex()->point().y()<<" ";
-        cout<<g->next()->opposite()->vertex()->point().z()<<endl;
-    }
-
 
     //triangle
 

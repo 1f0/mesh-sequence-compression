@@ -1682,18 +1682,8 @@ Compression_Valence_Component::Un_Regulation(Polyhedron &_pMesh, Arithmetic_Code
     Halfedge_handle h;
     int mycnt = 0;
     while (!Halfedges.empty()) {
-        mycnt++;
-        if (this->Decompress_count == 1)
-            cout << Halfedges.size() << endl;
         h = Halfedges.front();
         Halfedges.pop();
-
-        if (mycnt == 158) {
-            cout << "---" << this->Decompress_count << endl;
-            cout << h->vertex()->point().x() << endl;
-            cout << h->vertex()->point().y() << endl;
-            cout << h->vertex()->point().z() << endl;
-        }
 
         if ((h->facet()->Facet_Flag == CONQUERED) || (h->facet()->Facet_Flag == TO_BE_REMOVED))// already visited.
             continue;
@@ -1927,11 +1917,6 @@ void Compression_Valence_Component::Un_Decimation_Conquest(Polyhedron &_pMesh,
     Halfedge_handle h;
 
     while (!Halfedges.empty()) {
-        cnt++;
-        if (cnt == 16) {
-            cout << "tired" << endl;
-        }
-
 
         h = Halfedges.front();
 
