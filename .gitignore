@@ -16,5 +16,4 @@ CMakeCache.txt
 *.cmake
 *.ac
 *.ptb
-meshZip
-unpack
+*.out
