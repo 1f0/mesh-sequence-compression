@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body {
+            font-family: Monospace, serif;
+            background-color: black;
+            color: #ffffff;
+        }
+    </style>
+</head>
+<body>
+<div id="page-wrapper">
+    <h1>DRACO Here!</h1>
+    <div>
+        <button id="stop_btn">Stop</button>
+    </div>
+    <pre id="fileDisplayArea"></pre>
+</div>
+
+<script src="js/three.min.js"></script>
+<script src="js/OrbitControls.js"></script>
+<script src="js/painter.js"></script>
+
+<script>
+    "use strict";
+    if (typeof(Worker) === "undefined") {
+        console.log('error, webworker is not suppported');
+        throw new Error();
+    }
+    document.getElementById('stop_btn').addEventListener("click", stopWorker);
+    let w;
+    startWorker();
+
+    function startWorker() {
+        w = new Worker("js/worker.js");
+        w.onmessage = function (e) {
+            updateScene(e.data);
+        };
+    }
+
+    function stopWorker() {
+        w.postMessage({cmd:'end'});
+    }
+</script>
+
+</body>
+</html>
