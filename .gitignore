@@ -6,7 +6,7 @@ cmake-build-debug
 Makefile
 CMakefiles
 CMakeCache.txt
-
+build
 
 # generate
 *.obj
