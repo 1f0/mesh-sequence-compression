@@ -5,6 +5,7 @@ One is "[Streaming compressed 3D data on the web using JavaScript and WebGL](htt
 
 ## Distortion
 origin: v -6.537736 13.503677 28.752518
+
 transfered: v -6.53272 13.5135 28.808
 
 ## Performance Comparison
