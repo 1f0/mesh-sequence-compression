@@ -1,5 +1,7 @@
 # Compression for 3d Model Sequence Animation Online
-In this project, we built a demo website of viewing mesh animation with free interaction. To reduce the network load, we tried two different compression methods. One is [Streaming compressed 3D data on the web using JavaScript and WebGL](https://dl.acm.org/citation.cfm?id=2466539) since we got no efficient library available at the start of the project. Several months later, google released its [draco](https://github.com/google/draco) and we quickly kept our step with the new technology and developed the second demo.
+In this project, we built a demo website of viewing mesh animation with free interaction. To reduce the network load, we tried two different compression methods.
+
+One is "[Streaming compressed 3D data on the web using JavaScript and WebGL](https://dl.acm.org/citation.cfm?id=2466539)" since we got no efficient library available at the start of the project. Several months later, google released its [draco](https://github.com/google/draco) and we quickly developed the second website based on the new technology.
 
 ## Distortion
 origin: v -6.537736 13.503677 28.752518
