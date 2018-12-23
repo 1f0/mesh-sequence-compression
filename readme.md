@@ -16,9 +16,9 @@ transfered: v -6.53272 13.5135 28.808
 not available yet.
 
 ## TODO
-[] Currently half-edge mesh's vertex are taged using BFS, which used to be DFS, reflect on it
-[] Chrome doesn't support subworker yet. Draco-js needs Subworkers.js. Otherwise, you just use Firefox.
-[] Segment fault in src/build/bin and no valid data available now.
+- [ ] Currently half-edge mesh's vertex are taged using BFS, which used to be DFS, reflect on it
+- [ ] Chrome doesn't support subworker yet. Draco-js needs Subworkers.js. Otherwise, you just use Firefox.
+- [ ] Segment fault in src/build/bin and no valid data available now.
 
 ## Project Calling Tree
 + index.html -> main.js
