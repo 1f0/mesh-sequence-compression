@@ -3,6 +3,8 @@ In this project, we built a demo website of viewing mesh animation with free int
 
 One is "[Streaming compressed 3D data on the web using JavaScript and WebGL](https://dl.acm.org/citation.cfm?id=2466539)" since we got no efficient library available at the start of the project. Several months later, google released its [draco](https://github.com/google/draco) and we quickly developed the second website based on the new technology.
 
+![draco demo](img/demo.gif)
+
 ## Distortion
 origin: v -6.537736 13.503677 28.752518
 
